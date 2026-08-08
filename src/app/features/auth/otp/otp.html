@@ -1,0 +1,71 @@
+<div class="auth-split">
+  <aside class="auth-brand-pane reveal-soft">
+    <div class="auth-brand-top">
+      <div class="auth-wordmark">{{ 'app.name' | translate }}</div>
+      <app-lang-switcher [compact]="true" />
+    </div>
+    <div>
+      <h1 class="auth-hero-title">{{ 'auth.otpHeroTitle' | translate }}</h1>
+      <p class="auth-hero-copy">{{ 'auth.otpHeroCopy' | translate }}</p>
+    </div>
+    <div class="auth-brand-foot">{{ 'auth.otpFoot' | translate }}</div>
+  </aside>
+
+  <section class="auth-form-pane">
+    <div class="auth-form reveal">
+      <div class="auth-steps" aria-hidden="true">
+        <div class="auth-step is-done">✓</div>
+        <div class="auth-step-line is-done"></div>
+        <div class="auth-step is-on">2</div>
+      </div>
+
+      <h2 class="h5 fw-bold mb-1" style="letter-spacing: -0.03em">{{ 'auth.otpTitle' | translate }}</h2>
+      <p class="mb-3" style="color: var(--ca-ink-3)">{{ 'auth.otpHint' | translate }}</p>
+
+      @if (devOtp) {
+        <div class="dev-chip" role="status">
+          <div>
+            <div class="small" style="color: var(--ca-ink-3)">{{ 'auth.devOtp' | translate }}</div>
+            <strong>{{ devOtp }}</strong>
+          </div>
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="useDevOtp()">
+            {{ 'auth.use' | translate }}
+          </button>
+        </div>
+      }
+
+      <div class="otp-row mb-3" role="group" [attr.aria-label]="'auth.otpAria' | translate">
+        @for (digit of otp; track $index; let i = $index) {
+          <input
+            class="otp-cell"
+            maxlength="1"
+            inputmode="numeric"
+            autocomplete="one-time-code"
+            name="otp{{ i }}"
+            [(ngModel)]="otp[i]"
+            (input)="onInput($event, i)"
+            (keydown)="onKeydown($event, i)"
+            (paste)="onPaste($event)"
+          />
+        }
+      </div>
+
+      @if (hasError) {
+        <p class="field-error mb-3" role="alert">{{ errorMessage }}</p>
+      }
+
+      <button
+        class="btn btn-primary w-100 mb-3"
+        type="button"
+        [disabled]="loading"
+        [attr.aria-busy]="loading"
+        (click)="submit()"
+      >
+        {{ (loading ? 'auth.verifying' : 'auth.verify') | translate }}
+      </button>
+      <a routerLink="/login" class="d-block text-center back-link justify-content-center">
+        {{ 'auth.backToLogin' | translate }}
+      </a>
+    </div>
+  </section>
+</div>

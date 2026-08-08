@@ -1,0 +1,126 @@
+<div class="page tenants-page">
+  <header class="hero reveal-soft">
+    <div class="hero__copy">
+      <p class="eyebrow">{{ 'app.controlPlane' | translate }}</p>
+      <h1>{{ 'tenants.title' | translate }}</h1>
+      <p class="lede">{{ 'tenants.subtitle' | translate }}</p>
+    </div>
+    <div class="hero__actions">
+      <button class="btn btn-ghost-soft" type="button" (click)="reload()" [disabled]="loading()">
+        {{ 'common.refresh' | translate }}
+      </button>
+      <a routerLink="/tenants/new" class="btn btn-primary">{{ 'common.createTenant' | translate }}</a>
+    </div>
+  </header>
+
+  <div class="metrics reveal-soft" aria-label="summary">
+    <div class="metric">
+      <span class="metric__n tnum">{{ tenants().length }}</span>
+      <span class="metric__l">{{ 'common.total' | translate }}</span>
+    </div>
+    <div class="metric-divider" aria-hidden="true"></div>
+    <div class="metric">
+      <span class="metric__n tnum is-ok">{{ activeCount() }}</span>
+      <span class="metric__l">{{ 'status.active' | translate }}</span>
+    </div>
+    <div class="metric-divider" aria-hidden="true"></div>
+    <div class="metric">
+      <span class="metric__n tnum">{{ inactiveCount() }}</span>
+      <span class="metric__l">{{ 'status.inactive' | translate }}</span>
+    </div>
+  </div>
+
+  <section class="panel reveal">
+    <div class="controls">
+      <label class="visually-hidden" for="tenant-search">{{ 'tenants.searchAria' | translate }}</label>
+      <div class="search">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="8.5" cy="8.5" r="5.25" stroke="currentColor" stroke-width="1.5" />
+          <path d="M12.5 12.5 16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <input
+          id="tenant-search"
+          type="search"
+          [placeholder]="'tenants.searchPlaceholder' | translate"
+          [ngModel]="query()"
+          (ngModelChange)="onQuery($event)"
+        />
+      </div>
+
+      <div class="filters" role="group" [attr.aria-label]="'tenants.filterAria' | translate">
+        <button type="button" [class.is-on]="status() === 'all'" (click)="setStatus('all')">
+          {{ 'status.all' | translate }}
+        </button>
+        <button type="button" [class.is-on]="status() === 'active'" (click)="setStatus('active')">
+          {{ 'status.active' | translate }}
+        </button>
+        <button type="button" [class.is-on]="status() === 'inactive'" (click)="setStatus('inactive')">
+          {{ 'status.inactive' | translate }}
+        </button>
+      </div>
+
+      <span class="result-count tnum">{{ 'common.shown' | translate: { count: filtered().length } }}</span>
+    </div>
+
+    @if (loading()) {
+      <div class="list">
+        @for (_ of [1, 2, 3, 4]; track _) {
+          <div class="row skel">
+            <div class="skeleton avatar"></div>
+            <div class="skel-copy">
+              <div class="skeleton line w40"></div>
+              <div class="skeleton line w60"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (!filtered().length) {
+      <div class="empty-state reveal">
+        <div class="empty-orb" aria-hidden="true"></div>
+        @if (query().trim() || status() !== 'all') {
+          <h2>{{ 'tenants.noMatchesTitle' | translate }}</h2>
+          <p>{{ 'tenants.noMatchesText' | translate }}</p>
+          <button class="btn btn-outline-secondary" type="button" (click)="onQuery(''); setStatus('all')">
+            {{ 'common.clearFilters' | translate }}
+          </button>
+        } @else {
+          <h2>{{ 'tenants.emptyTitle' | translate }}</h2>
+          <p>{{ 'tenants.emptyText' | translate }}</p>
+          <a routerLink="/tenants/new" class="btn btn-primary">{{ 'common.createTenant' | translate }}</a>
+        }
+      </div>
+    } @else {
+      <ul class="list">
+        @for (t of filtered(); track t.id; let i = $index) {
+          <li class="reveal-item" [style.--reveal-i]="i < 12 ? i : 12">
+            <button type="button" class="row" (click)="openTenant(t.id)">
+              <span class="avatar" [attr.data-tone]="tone(t.id)" aria-hidden="true">{{ mark(t.id) }}</span>
+
+              <span class="body">
+                <span class="title-line">
+                  <span class="id">{{ t.id }}</span>
+                  <span class="pill" [class.is-on]="t.active" [class.is-off]="!t.active">
+                    {{ (t.active ? 'status.active' : 'status.inactive') | translate }}
+                  </span>
+                </span>
+                <span class="meta">
+                  <span class="domain">{{ t.domain || '—' }}</span>
+                  @if (moduleLabels(t).length) {
+                    <span class="dot" aria-hidden="true">·</span>
+                    <span class="mods">{{ moduleLabels(t).join(', ') }}</span>
+                  }
+                </span>
+              </span>
+
+              <span class="chev" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none">
+                  <path d="m7.5 4.5 5 5.5-5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</div>

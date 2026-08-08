@@ -1,0 +1,295 @@
+<div class="page detail-page">
+  <a routerLink="/tenants" class="back-link">← {{ 'common.backToTenants' | translate }}</a>
+
+  @if (loading) {
+    <div class="detail-skel" aria-hidden="true">
+      <header class="hero-card hero-card--skel">
+        <div class="hero-main">
+          <div class="skeleton skel-mark"></div>
+          <div class="skel-copy">
+            <div class="skel-title-row">
+              <div class="skeleton skel-heading"></div>
+              <div class="skeleton skel-pill"></div>
+            </div>
+            <div class="skeleton skel-line skel-line--mid"></div>
+            <div class="skel-chips">
+              <div class="skeleton skel-chip"></div>
+              <div class="skeleton skel-chip"></div>
+              <div class="skeleton skel-chip skel-chip--short"></div>
+            </div>
+          </div>
+        </div>
+        <div class="skeleton skel-btn"></div>
+      </header>
+
+      <div class="detail-grid">
+        <section class="card card--skel">
+          <div class="skel-copy">
+            <div class="skeleton skel-card-title"></div>
+            <div class="skeleton skel-line skel-line--wide"></div>
+          </div>
+          <div class="skel-inline">
+            <div class="skeleton skel-field"></div>
+            <div class="skeleton skel-btn skel-btn--sm"></div>
+          </div>
+        </section>
+
+        <section class="card card--skel">
+          <div class="skel-copy">
+            <div class="skeleton skel-card-title"></div>
+            <div class="skeleton skel-line skel-line--wide"></div>
+          </div>
+          <div class="skel-modules">
+            <div class="skeleton skel-module"></div>
+            <div class="skeleton skel-module"></div>
+          </div>
+          <div class="skeleton skel-btn skel-btn--md"></div>
+        </section>
+
+        <section class="card card--wide card--skel">
+          <div class="card__head card__head--row">
+            <div class="skel-copy">
+              <div class="skeleton skel-card-title"></div>
+              <div class="skeleton skel-line skel-line--mid"></div>
+            </div>
+            <div class="skeleton skel-count"></div>
+          </div>
+
+          <div class="admins-layout">
+            <div class="admins-panel admins-panel--skel">
+              <div class="skel-admin-head">
+                @for (_ of [1, 2, 3, 4, 5]; track _) {
+                  <div class="skeleton skel-th"></div>
+                }
+              </div>
+              @for (_ of [1, 2, 3, 4]; track _) {
+                <div class="skel-admin-row">
+                  <div class="skel-admin-name">
+                    <div class="skeleton skel-avatar"></div>
+                    <div class="skeleton skel-line skel-line--name"></div>
+                  </div>
+                  <div class="skeleton skel-td"></div>
+                  <div class="skeleton skel-td skel-td--short"></div>
+                  <div class="skeleton skel-td skel-td--chip"></div>
+                  <div class="skeleton skel-td skel-td--pill"></div>
+                </div>
+              }
+            </div>
+
+            <aside class="admins-create admins-create--skel">
+              <div class="skel-copy">
+                <div class="skeleton skel-card-title"></div>
+                <div class="skeleton skel-line skel-line--mid"></div>
+              </div>
+              @for (_ of [1, 2, 3, 4]; track _) {
+                <div class="skel-field-block">
+                  <div class="skeleton skel-label"></div>
+                  <div class="skeleton skel-field"></div>
+                </div>
+              }
+              <div class="skeleton skel-btn"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="card card--skel">
+          <div class="skel-copy">
+            <div class="skeleton skel-card-title"></div>
+            <div class="skeleton skel-line skel-line--wide"></div>
+          </div>
+          <div class="skel-inline">
+            <div class="skeleton skel-field skel-field--tall"></div>
+            <div class="skeleton skel-btn skel-btn--sm"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  } @else if (!tenant) {
+    <div class="hero-card empty-card reveal">
+      <div class="empty-orb" aria-hidden="true"></div>
+      <h2>{{ 'tenants.notFoundTitle' | translate }}</h2>
+      <p>{{ 'tenants.notFoundText' | translate: { id: tenantId } }}</p>
+      <a routerLink="/tenants" class="btn btn-primary btn-sm">{{ 'common.backToTenants' | translate }}</a>
+    </div>
+  } @else if (tenant) {
+    <header class="hero-card reveal">
+      <div class="hero-main">
+        <div class="tenant-mark" aria-hidden="true">{{ tenant.id.slice(0, 2).toUpperCase() }}</div>
+        <div class="min-w-0">
+          <div class="title-row">
+            <h1>{{ tenant.id }}</h1>
+            <span class="pill" [class.is-on]="tenant.active" [class.is-off]="!tenant.active">
+              {{ (tenant.active ? 'status.active' : 'status.inactive') | translate }}
+            </span>
+          </div>
+          <p class="domain">{{ tenant.domain || ('tenants.noDomain' | translate) }}</p>
+          <div class="mod-line">
+            @for (m of tenant.modules; track m) {
+              <span class="chip">{{ ('modules.' + m) | translate }}</span>
+            } @empty {
+              <span class="chip is-mute">{{ 'modules.noModules' | translate }}</span>
+            }
+          </div>
+        </div>
+      </div>
+      <button
+        class="btn"
+        [class.btn-outline-danger]="tenant.active"
+        [class.btn-success]="!tenant.active"
+        type="button"
+        [disabled]="saving"
+        (click)="toggleActive()"
+      >
+        {{ (tenant.active ? 'tenants.deactivate' : 'tenants.activate') | translate }}
+      </button>
+    </header>
+
+    <div class="detail-grid">
+      <section class="card reveal-item" style="--reveal-i: 0">
+        <div class="card__head">
+          <h2>{{ 'tenants.domainPanel' | translate }}</h2>
+          <p>{{ 'tenants.domainHint' | translate }}</p>
+        </div>
+        <form [formGroup]="domainForm" (ngSubmit)="saveDomain()" class="inline-form">
+          <label class="visually-hidden" for="domain">{{ 'tenants.domain' | translate }}</label>
+          <input id="domain" class="form-control" formControlName="domain" />
+          <button class="btn btn-primary" type="submit" [disabled]="saving">
+            {{ 'common.save' | translate }}
+          </button>
+        </form>
+      </section>
+
+      <section class="card reveal-item" style="--reveal-i: 1">
+        <div class="card__head">
+          <h2>{{ 'tenants.modulesPanel' | translate }}</h2>
+          <p>{{ 'tenants.modulesHint' | translate }}</p>
+        </div>
+        <form [formGroup]="modulesForm" (ngSubmit)="saveModules()">
+          <div class="module-grid mb-3">
+            <label class="module-tile" [class.is-on]="modulesForm.controls.property.value">
+              <input class="form-check-input mt-1" type="checkbox" id="property" formControlName="property" />
+              <span>
+                <strong class="d-block">{{ 'modules.property' | translate }}</strong>
+                <small class="hint">{{ 'modules.propertyShort' | translate }}</small>
+              </span>
+            </label>
+            <label class="module-tile" [class.is-on]="modulesForm.controls.education.value">
+              <input class="form-check-input mt-1" type="checkbox" id="education" formControlName="education" />
+              <span>
+                <strong class="d-block">{{ 'modules.education' | translate }}</strong>
+                <small class="hint">{{ 'modules.educationShort' | translate }}</small>
+              </span>
+            </label>
+          </div>
+          <button class="btn btn-primary" type="submit" [disabled]="saving">
+            {{ 'tenants.updateModules' | translate }}
+          </button>
+        </form>
+      </section>
+
+      <section class="card card--wide admins-card reveal-item" style="--reveal-i: 2">
+        <div class="card__head card__head--row">
+          <div>
+            <h2>{{ 'tenants.adminsPanel' | translate }}</h2>
+            <p>{{ 'tenants.adminsHint' | translate }}</p>
+          </div>
+          <span class="count-chip tnum">{{ tenantAdmins.length }}</span>
+        </div>
+
+        <div class="admins-layout">
+          <div class="admins-panel">
+            @if (!tenantAdmins.length) {
+              <div class="admins-empty">
+                <div class="empty-orb" aria-hidden="true"></div>
+                <p>{{ 'tenants.noAdmins' | translate }}</p>
+              </div>
+            } @else {
+              <div class="admin-table" role="table" [attr.aria-label]="'tenants.adminsPanel' | translate">
+                <div class="admin-table__head" role="row">
+                  <span role="columnheader">{{ 'tenants.name' | translate }}</span>
+                  <span role="columnheader">{{ 'tenants.email' | translate }}</span>
+                  <span role="columnheader">{{ 'tenants.mobile' | translate }}</span>
+                  <span role="columnheader">{{ 'tenants.adminRole' | translate }}</span>
+                  <span role="columnheader">{{ 'dashboard.status' | translate }}</span>
+                </div>
+                @for (admin of tenantAdmins; track admin.id) {
+                  <div class="admin-table__row" role="row">
+                    <span class="admin-name-cell" role="cell">
+                      <span class="admin-mark" aria-hidden="true">{{ adminMark(admin.name) }}</span>
+                      <strong>{{ admin.name }}</strong>
+                    </span>
+                    <span class="mono trunc" role="cell">{{ admin.email }}</span>
+                    <span class="tnum trunc" role="cell">{{ admin.mobile || ('common.none' | translate) }}</span>
+                    <span role="cell"><span class="role-chip">{{ roleLabel(admin.roles) }}</span></span>
+                    <span role="cell">
+                      <span class="pill" [class.is-on]="admin.active !== false" [class.is-off]="admin.active === false">
+                        {{ (admin.active !== false ? 'status.active' : 'status.inactive') | translate }}
+                      </span>
+                    </span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+
+          <aside class="admins-create">
+            <div class="card__head">
+              <h3>{{ 'tenants.adminPanel' | translate }}</h3>
+              <p>{{ 'tenants.adminHint' | translate }}</p>
+            </div>
+            <form [formGroup]="adminForm" (ngSubmit)="createAdmin()" class="admin-grid admin-grid--stack">
+              <div>
+                <label class="form-label" for="admin-name">{{ 'tenants.name' | translate }}</label>
+                <input id="admin-name" class="form-control" formControlName="name" />
+              </div>
+              <div>
+                <label class="form-label" for="admin-email">{{ 'tenants.email' | translate }}</label>
+                <input id="admin-email" class="form-control" formControlName="email" />
+              </div>
+              <div>
+                <label class="form-label" for="admin-mobile">{{ 'tenants.mobile' | translate }}</label>
+                <input id="admin-mobile" class="form-control" formControlName="mobile" />
+              </div>
+              <div>
+                <label class="form-label" for="admin-password">{{ 'tenants.password' | translate }}</label>
+                <input id="admin-password" class="form-control" type="password" formControlName="password" />
+              </div>
+              <div class="admin-actions">
+                <button class="btn btn-primary" type="submit" [disabled]="saving">
+                  {{ 'tenants.createAdmin' | translate }}
+                </button>
+              </div>
+            </form>
+          </aside>
+        </div>
+      </section>
+
+      <section class="card reveal-item" style="--reveal-i: 3">
+        <div class="card__head">
+          <h2>{{ 'tenants.linkPanel' | translate }}</h2>
+          <p>{{ 'tenants.linkHint' | translate }}</p>
+        </div>
+        @if (!platformUsers.length) {
+          <p class="empty-copy">{{ 'tenants.noPlatformUsers' | translate }}</p>
+          <a routerLink="/users/new" class="btn btn-outline-secondary">{{ 'common.createUser' | translate }}</a>
+        } @else {
+          <form [formGroup]="linkForm" (ngSubmit)="linkUser()" class="inline-form">
+            <div class="flex-grow-1">
+              <label class="form-label" for="user-id">{{ 'tenants.selectUser' | translate }}</label>
+              <select id="user-id" class="form-select" formControlName="user_id">
+                <option value="" disabled>{{ 'tenants.selectUserPlaceholder' | translate }}</option>
+                @for (u of platformUsers; track u.id) {
+                  <option [value]="u.id">{{ u.name }} — {{ u.email }} (#{{ u.id }})</option>
+                }
+              </select>
+            </div>
+            <button class="btn btn-outline-secondary align-self-end" type="submit" [disabled]="saving">
+              {{ 'tenants.link' | translate }}
+            </button>
+          </form>
+          <a routerLink="/users" class="manage-link">{{ 'tenants.manageUsers' | translate }}</a>
+        }
+      </section>
+    </div>
+  }
+</div>

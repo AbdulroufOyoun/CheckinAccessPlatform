@@ -1,0 +1,97 @@
+<div class="page create-page reveal-soft">
+  <a routerLink="/users" class="back-link">← {{ 'common.backToUsers' | translate }}</a>
+
+  <div class="page-header reveal">
+    <div>
+      <h1>{{ 'users.createTitle' | translate }}</h1>
+      <p>{{ 'users.createSubtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <form class="surface form-card reveal" [formGroup]="form" (ngSubmit)="submit()">
+    <section class="form-section">
+      <div class="section-head">
+        <span class="step">1</span>
+        <div>
+          <div class="section-title">{{ 'users.stepIdentity' | translate }}</div>
+          <p class="section-copy">{{ 'users.stepIdentityCopy' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="name">{{ 'tenants.name' | translate }}</label>
+        <input id="name" class="form-control" formControlName="name" autocomplete="name" />
+        @if (form.controls.name.touched && form.controls.name.invalid) {
+          <div class="field-error">{{ 'users.nameRequired' | translate }}</div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="email">{{ 'tenants.email' | translate }}</label>
+        <input id="email" class="form-control" type="email" formControlName="email" autocomplete="email" />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <div class="field-error">{{ 'users.emailInvalid' | translate }}</div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="mobile">{{ 'tenants.mobile' | translate }}</label>
+        <input
+          id="mobile"
+          class="form-control mono"
+          formControlName="mobile"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="05xxxxxxxx"
+          autocomplete="tel"
+        />
+        <div class="form-text hint">{{ 'users.mobileHint' | translate }}</div>
+        @if (form.controls.mobile.touched && form.controls.mobile.invalid) {
+          <div class="field-error">{{ 'users.mobileInvalid' | translate }}</div>
+        }
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="password">{{ 'tenants.password' | translate }}</label>
+        <input
+          id="password"
+          class="form-control"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+        />
+        @if (form.controls.password.touched && form.controls.password.invalid) {
+          <div class="field-error">{{ 'users.passwordInvalid' | translate }}</div>
+        }
+      </div>
+    </section>
+
+    <section class="form-section">
+      <div class="section-head">
+        <span class="step">2</span>
+        <div>
+          <div class="section-title">{{ 'users.stepAccess' | translate }}</div>
+          <p class="section-copy">{{ 'users.stepAccessCopy' | translate }}</p>
+        </div>
+      </div>
+
+      <label class="admin-toggle" [class.is-on]="form.controls.is_platform_admin.value">
+        <input class="visually-hidden" type="checkbox" formControlName="is_platform_admin" />
+        <span class="admin-toggle__body">
+          <strong>{{ 'users.platformAdmin' | translate }}</strong>
+          <small>{{ 'users.platformAdminHint' | translate }}</small>
+        </span>
+        <span class="admin-toggle__state">
+          {{ (form.controls.is_platform_admin.value ? 'common.on' : 'common.off') | translate }}
+        </span>
+      </label>
+    </section>
+
+    <div class="form-actions">
+      <a routerLink="/users" class="btn btn-outline-secondary">{{ 'common.cancel' | translate }}</a>
+      <button class="btn btn-primary" type="submit" [disabled]="loading">
+        {{ loading ? ('common.loading' | translate) : ('common.createUser' | translate) }}
+      </button>
+    </div>
+  </form>
+</div>

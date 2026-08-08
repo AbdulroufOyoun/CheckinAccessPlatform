@@ -1,0 +1,7 @@
+.global-toast-stack {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1080;
+  width: min(420px, calc(100vw - 2rem));
+}

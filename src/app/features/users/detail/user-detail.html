@@ -1,0 +1,145 @@
+<div class="page detail-page">
+  <a routerLink="/users" class="back-link">← {{ 'common.backToUsers' | translate }}</a>
+
+  @if (loading) {
+    <div class="hero-card">
+      <div class="hero-skel">
+        <div class="skeleton skel-mark"></div>
+        <div class="skel-copy">
+          <div class="skeleton mb-2" style="width: 30%; height: 22px"></div>
+          <div class="skeleton" style="width: 50%; height: 14px"></div>
+        </div>
+      </div>
+    </div>
+  } @else if (!user) {
+    <div class="hero-card empty-card reveal">
+      <div class="empty-orb" aria-hidden="true"></div>
+      <h2>{{ 'users.notFoundTitle' | translate }}</h2>
+      <p>{{ 'users.notFoundText' | translate: { id: userId } }}</p>
+      <a routerLink="/users" class="btn btn-primary btn-sm">{{ 'common.backToUsers' | translate }}</a>
+    </div>
+  } @else {
+    <header class="hero-card reveal">
+      <div class="hero-main">
+        <div class="user-mark" aria-hidden="true">{{ mark(user.name) }}</div>
+        <div class="min-w-0">
+          <div class="title-row">
+            <h1>{{ user.name }}</h1>
+            <span class="pill" [class.is-on]="user.active" [class.is-off]="!user.active">
+              {{ (user.active ? 'status.active' : 'status.inactive') | translate }}
+            </span>
+            @if (user.is_platform_admin) {
+              <span class="pill is-admin">{{ 'users.platformAdmin' | translate }}</span>
+            }
+          </div>
+          <p class="email">{{ user.email }} · #{{ user.id }}</p>
+          <p class="role-note">
+            {{
+              (user.is_platform_admin ? 'users.adminMeaning' : 'users.nonAdminMeaning') | translate
+            }}
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <div class="detail-grid">
+      <section class="card reveal-item" style="--reveal-i: 0">
+        <div class="card__head">
+          <h2>{{ 'users.editPanel' | translate }}</h2>
+          <p>{{ 'users.editHint' | translate }}</p>
+        </div>
+
+        <form [formGroup]="form" (ngSubmit)="save()">
+          <div class="field-grid">
+            <div class="field">
+              <label class="form-label" for="name">{{ 'tenants.name' | translate }}</label>
+              <input id="name" class="form-control" formControlName="name" />
+            </div>
+            <div class="field">
+              <label class="form-label" for="email">{{ 'tenants.email' | translate }}</label>
+              <input id="email" class="form-control" type="email" formControlName="email" />
+            </div>
+            <div class="field">
+              <label class="form-label" for="mobile">{{ 'tenants.mobile' | translate }}</label>
+              <input id="mobile" class="form-control mono" formControlName="mobile" maxlength="10" />
+            </div>
+            <div class="field">
+              <label class="form-label" for="password">{{ 'users.newPassword' | translate }}</label>
+              <input
+                id="password"
+                class="form-control"
+                type="password"
+                formControlName="password"
+                autocomplete="new-password"
+              />
+              <div class="form-text hint">{{ 'users.newPasswordHint' | translate }}</div>
+            </div>
+          </div>
+
+          <div class="toggles">
+            <label class="admin-toggle" [class.is-on]="form.controls.is_platform_admin.value">
+              <input class="visually-hidden" type="checkbox" formControlName="is_platform_admin" />
+              <span class="admin-toggle__body">
+                <strong>{{ 'users.platformAdmin' | translate }}</strong>
+                <small>{{ 'users.platformAdminHint' | translate }}</small>
+              </span>
+              <span class="admin-toggle__state">
+                {{ (form.controls.is_platform_admin.value ? 'common.on' : 'common.off') | translate }}
+              </span>
+            </label>
+
+            <label class="admin-toggle" [class.is-on]="form.controls.active.value">
+              <input class="visually-hidden" type="checkbox" formControlName="active" />
+              <span class="admin-toggle__body">
+                <strong>{{ 'status.active' | translate }}</strong>
+                <small>{{ 'users.activeHint' | translate }}</small>
+              </span>
+              <span class="admin-toggle__state">
+                {{ (form.controls.active.value ? 'common.on' : 'common.off') | translate }}
+              </span>
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary" type="submit" [disabled]="saving">
+              {{ saving ? ('common.loading' | translate) : ('common.save' | translate) }}
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card reveal-item" style="--reveal-i: 1" id="tenants">
+        <div class="card__head">
+          <h2>{{ 'users.linkedTenants' | translate }}</h2>
+          <p>{{ 'users.linkedTenantsHint' | translate }}</p>
+        </div>
+
+        @if (!user.tenants?.length) {
+          <div class="empty-tenants">
+            <p>{{ 'users.noLinkedTenants' | translate }}</p>
+            <a routerLink="/tenants" class="btn btn-outline-secondary btn-sm">
+              {{ 'nav.tenants' | translate }}
+            </a>
+          </div>
+        } @else {
+          <ul class="tenant-list">
+            @for (t of user.tenants; track t.id; let i = $index) {
+              <li>
+                <button type="button" class="tenant-row reveal-item" [style.--reveal-i]="i < 10 ? i : 10" (click)="openTenant(t.id)">
+                  <span class="tenant-mark-sm" aria-hidden="true">{{ t.id.slice(0, 2).toUpperCase() }}</span>
+                  <span class="tenant-body">
+                    <strong>{{ t.id }}</strong>
+                    <small>{{ t.domain || ('tenants.noDomain' | translate) }}</small>
+                  </span>
+                  <span class="pill" [class.is-on]="t.active" [class.is-off]="!t.active">
+                    {{ (t.active ? 'status.active' : 'status.inactive') | translate }}
+                  </span>
+                </button>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+  }
+</div>

@@ -1,0 +1,203 @@
+<div class="page">
+  <div class="page-header reveal-soft">
+    <div>
+      <h1>{{ greetingKey() | translate }}{{ firstName() ? ', ' + firstName() : '' }}</h1>
+      <p class="subtitle">
+        {{ 'dashboard.overview' | translate }}
+        @if (auth.user()?.is_platform_admin) {
+          <span class="badge badge-accent">{{ 'dashboard.platformAdmin' | translate }}</span>
+        }
+      </p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-secondary" type="button" (click)="reload()" [disabled]="loading()">
+        {{ 'common.refresh' | translate }}
+      </button>
+      <a routerLink="/tenants/new" class="btn btn-primary">{{ 'common.createTenant' | translate }}</a>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="dash-grid">
+      <div class="kpi-grid">
+        @for (_ of [1, 2, 3]; track _) {
+          <div class="surface kpi">
+            <div class="skeleton mb-2" style="width: 40%; height: 12px"></div>
+            <div class="skeleton" style="width: 28%; height: 28px"></div>
+          </div>
+        }
+      </div>
+      <div class="surface p-3">
+        <div class="skeleton mb-3" style="width: 45%; height: 14px"></div>
+        <div class="skeleton mb-2" style="height: 12px"></div>
+        <div class="skeleton" style="height: 12px; width: 70%"></div>
+      </div>
+    </div>
+  } @else {
+    <div class="dash-grid reveal">
+      <div class="kpi-grid">
+        <div class="surface kpi kpi--primary reveal-item" style="--reveal-i: 0">
+          <div class="kpi__top">
+            <div class="kpi__label">{{ 'dashboard.tenants' | translate }}</div>
+            <span class="kpi__hint">{{ 'dashboard.fleetSize' | translate }}</span>
+          </div>
+          <div class="kpi__value tnum">{{ tenants().length }}</div>
+          <div class="health">
+            <div class="health__track" aria-hidden="true">
+              <div class="health__fill" [style.width.%]="activeRatio()"></div>
+            </div>
+            <div class="health__meta">
+              <span class="tnum">{{ 'dashboard.percentActive' | translate: { pct: activeRatio() } }}</span>
+              <span>
+                {{
+                  'dashboard.onlineMeta'
+                    | translate: { active: activeCount(), total: tenants().length || 0 }
+                }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="surface kpi reveal-item" style="--reveal-i: 1">
+          <div class="kpi__top">
+            <div class="kpi__label">{{ 'status.active' | translate }}</div>
+            <span class="dot ok" aria-hidden="true"></span>
+          </div>
+          <div class="kpi__value tnum ok">{{ activeCount() }}</div>
+          <div class="kpi__foot">{{ 'dashboard.activeFoot' | translate }}</div>
+        </div>
+
+        <div class="surface kpi reveal-item" style="--reveal-i: 2">
+          <div class="kpi__top">
+            <div class="kpi__label">{{ 'status.inactive' | translate }}</div>
+            <span class="dot mute" aria-hidden="true"></span>
+          </div>
+          <div class="kpi__value tnum mute">{{ inactiveCount() }}</div>
+          <div class="kpi__foot">{{ 'dashboard.inactiveFoot' | translate }}</div>
+        </div>
+      </div>
+
+      <aside class="surface side-panel reveal-item" style="--reveal-i: 3">
+        <div class="side-panel__title">{{ 'dashboard.quickActions' | translate }}</div>
+        <a routerLink="/tenants/new" class="action-link">
+          <span class="action-ico" aria-hidden="true">+</span>
+          <span>
+            <strong>{{ 'common.createTenant' | translate }}</strong>
+            <small>{{ 'dashboard.createTenantDesc' | translate }}</small>
+          </span>
+        </a>
+        <a routerLink="/tenants" class="action-link">
+          <span class="action-ico" aria-hidden="true">▦</span>
+          <span>
+            <strong>{{ 'dashboard.browseTenants' | translate }}</strong>
+            <small>{{ 'dashboard.browseTenantsDesc' | translate }}</small>
+          </span>
+        </a>
+
+        <div class="coverage">
+          <div class="side-panel__title">{{ 'dashboard.moduleCoverage' | translate }}</div>
+          <div class="coverage-row">
+            <span>{{ 'modules.property' | translate }}</span>
+            <strong class="tnum">{{ propertyCount() }}</strong>
+          </div>
+          <div class="coverage-row">
+            <span>{{ 'modules.education' | translate }}</span>
+            <strong class="tnum">{{ educationCount() }}</strong>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="surface-flush list-card reveal" style="animation-delay: 120ms">
+      <div class="toolbar">
+        <div>
+          <strong class="list-title">{{ 'dashboard.recentTenants' | translate }}</strong>
+          <div class="list-sub">{{ 'dashboard.recentSub' | translate }}</div>
+        </div>
+        <a routerLink="/tenants" class="view-all">{{ 'common.viewAll' | translate }}</a>
+      </div>
+
+      @if (!tenants().length) {
+        <div class="empty">
+          <div class="empty__title">{{ 'dashboard.emptyTitle' | translate }}</div>
+          <p class="empty__text">{{ 'dashboard.emptyText' | translate }}</p>
+          <a routerLink="/tenants/new" class="btn btn-primary">{{ 'common.createTenant' | translate }}</a>
+        </div>
+      } @else {
+        <div class="table-responsive desktop-table">
+          <table class="table dash-table">
+            <thead>
+              <tr>
+                <th>{{ 'dashboard.company' | translate }}</th>
+                <th>{{ 'dashboard.domain' | translate }}</th>
+                <th>{{ 'dashboard.modules' | translate }}</th>
+                <th>{{ 'dashboard.status' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of recent(); track t.id; let i = $index) {
+                <tr
+                  class="row-link reveal-item"
+                  [style.--reveal-i]="i < 12 ? i : 12"
+                  tabindex="0"
+                  (click)="openTenant(t.id)"
+                  (keydown.enter)="openTenant(t.id)"
+                  (keydown.space)="$event.preventDefault(); openTenant(t.id)"
+                >
+                  <td>
+                    <div class="company-cell">
+                      <span class="company-mark" aria-hidden="true">{{ mark(t.id) }}</span>
+                      <span class="company-id mono">{{ t.id }}</span>
+                    </div>
+                  </td>
+                  <td class="domain mono">{{ t.domain || '—' }}</td>
+                  <td>
+                    <div class="mod-wrap">
+                      @for (m of t.modules; track m) {
+                        <span class="badge" [class.badge-accent]="m === 'property'" [class.badge-soft]="m !== 'property'">
+                          {{ ('modules.' + m) | translate }}
+                        </span>
+                      } @empty {
+                        <span class="muted">{{ 'common.none' | translate }}</span>
+                      }
+                    </div>
+                  </td>
+                  <td>
+                    <span class="badge" [class.badge-ok]="t.active" [class.badge-mute]="!t.active">
+                      <span class="status-dot" aria-hidden="true"></span>
+                      {{ (t.active ? 'status.active' : 'status.inactive') | translate }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <ul class="mobile-recent">
+          @for (t of recent(); track t.id; let i = $index) {
+            <li>
+              <button type="button" class="recent-card reveal-item" [style.--reveal-i]="i < 12 ? i : 12" (click)="openTenant(t.id)">
+                <span class="company-mark" aria-hidden="true">{{ mark(t.id) }}</span>
+                <span class="recent-body">
+                  <span class="company-id mono">{{ t.id }}</span>
+                  <span class="domain mono">{{ t.domain || '—' }}</span>
+                  <span class="mod-wrap">
+                    @for (m of t.modules; track m) {
+                      <span class="badge" [class.badge-accent]="m === 'property'" [class.badge-soft]="m !== 'property'">
+                        {{ ('modules.' + m) | translate }}
+                      </span>
+                    }
+                  </span>
+                </span>
+                <span class="badge" [class.badge-ok]="t.active" [class.badge-mute]="!t.active">
+                  {{ (t.active ? 'status.active' : 'status.inactive') | translate }}
+                </span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>

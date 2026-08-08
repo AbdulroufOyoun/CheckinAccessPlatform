@@ -1,0 +1,347 @@
+<div class="page reports-page">
+  <div class="page-header reveal-soft no-print">
+    <div>
+      <p class="eyebrow">{{ 'app.controlPlane' | translate }}</p>
+      <h1>{{ 'reports.title' | translate }}</h1>
+      <p class="subtitle">{{ 'reports.subtitle' | translate }}</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-secondary" type="button" (click)="reload()" [disabled]="loading()">
+        {{ 'common.refresh' | translate }}
+      </button>
+      <button class="btn btn-primary" type="button" (click)="printReport()" [disabled]="loading()">
+        {{ 'reports.print' | translate }}
+      </button>
+    </div>
+  </div>
+
+  @if (loading()) {
+    <div class="reports-skel no-print" aria-hidden="true">
+      <div class="catalog">
+        @for (_ of [1, 2, 3, 4, 5, 6, 7, 8]; track _) {
+          <div class="surface report-card report-card--skel">
+            <div class="skeleton skel-icon"></div>
+            <div class="skel-copy">
+              <div class="skeleton skel-title"></div>
+              <div class="skeleton skel-line"></div>
+              <div class="skeleton skel-line skel-line--short"></div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="preview-toolbar preview-toolbar--skel">
+        <div class="skel-copy">
+          <div class="skeleton skel-title"></div>
+          <div class="skeleton skel-line skel-line--mid"></div>
+        </div>
+        <div class="toolbar-right">
+          <div class="skeleton skel-select"></div>
+          <div class="skeleton skel-btn"></div>
+        </div>
+      </div>
+
+      <div class="print-sheet print-sheet--skel">
+        <div class="print-head print-head--skel">
+          <div class="skel-copy">
+            <div class="skeleton skel-eyebrow"></div>
+            <div class="skeleton skel-heading"></div>
+            <div class="skeleton skel-line skel-line--wide"></div>
+          </div>
+          <div class="skel-copy skel-copy--end">
+            <div class="skeleton skel-line skel-line--short"></div>
+            <div class="skeleton skel-line skel-line--mid"></div>
+          </div>
+        </div>
+
+        <div class="summary-kpis summary-kpis--skel">
+          @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+            <div class="summary-kpi summary-kpi--skel">
+              <div class="skeleton skel-line skel-line--short"></div>
+              <div class="skeleton skel-value"></div>
+            </div>
+          }
+        </div>
+
+        <div class="skel-table">
+          <div class="skel-table__head">
+            @for (_ of [1, 2, 3, 4]; track _) {
+              <div class="skeleton skel-th"></div>
+            }
+          </div>
+          @for (_ of [1, 2, 3, 4, 5, 6]; track _) {
+            <div class="skel-table__row">
+              <div class="skeleton skel-td"></div>
+              <div class="skeleton skel-td skel-td--wide"></div>
+              <div class="skeleton skel-td"></div>
+              <div class="skeleton skel-td skel-td--short"></div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <section class="catalog reveal no-print">
+      @for (r of catalog; track r.id; let i = $index) {
+        <button
+          type="button"
+          class="surface report-card reveal-item"
+          [style.--reveal-i]="i"
+          [class.is-active]="selectedReport() === r.id"
+          (click)="selectReport(r.id)"
+        >
+          <span class="report-card__icon" [attr.data-icon]="r.icon" aria-hidden="true"></span>
+          <span class="report-card__copy">
+            <strong>{{ r.titleKey | translate }}</strong>
+            <small>{{ r.descKey | translate }}</small>
+          </span>
+        </button>
+      }
+    </section>
+
+    <div class="preview-toolbar no-print reveal-soft">
+      <div>
+        <strong>{{ currentDef().titleKey | translate }}</strong>
+        <div class="preview-sub">{{ 'reports.previewHint' | translate }}</div>
+      </div>
+      <div class="toolbar-right">
+        @if (
+          selectedReport() === 'tenants_all' ||
+          selectedReport() === 'tenants_active' ||
+          selectedReport() === 'tenants_inactive' ||
+          selectedReport() === 'modules'
+        ) {
+          <label class="filter-label" for="module-filter">{{ 'reports.filterModule' | translate }}</label>
+          <select
+            id="module-filter"
+            class="form-select filter-select"
+            [ngModel]="moduleFilter()"
+            (ngModelChange)="setModuleFilter($event)"
+          >
+            <option value="all">{{ 'status.all' | translate }}</option>
+            <option value="property">{{ 'modules.property' | translate }}</option>
+            <option value="education">{{ 'modules.education' | translate }}</option>
+          </select>
+        }
+        <button class="btn btn-primary" type="button" (click)="printReport()">
+          {{ 'reports.printSelected' | translate }}
+        </button>
+      </div>
+    </div>
+
+    <article class="print-sheet surface reveal" id="report-print-area">
+      <header class="print-head">
+        <div>
+          <div class="print-brand">{{ 'app.name' | translate }} · {{ 'app.controlPlane' | translate }}</div>
+          <h2>{{ currentDef().titleKey | translate }}</h2>
+          <p>{{ currentDef().descKey | translate }}</p>
+        </div>
+        <div class="print-meta">
+          <div>{{ 'reports.generatedAt' | translate }}</div>
+          <strong>{{ generatedAt() | date: 'medium' }}</strong>
+          <div class="print-by">
+            {{ 'reports.generatedBy' | translate: { name: auth.user()?.name || '—' } }}
+          </div>
+        </div>
+      </header>
+
+      @if (selectedReport() === 'summary') {
+        <div class="summary-kpis">
+          <div class="summary-kpi">
+            <span>{{ 'reports.kpiTenants' | translate }}</span>
+            <strong class="tnum">{{ tenants().length }}</strong>
+          </div>
+          <div class="summary-kpi">
+            <span>{{ 'status.active' | translate }}</span>
+            <strong class="tnum ok">{{ activeTenants().length }}</strong>
+          </div>
+          <div class="summary-kpi">
+            <span>{{ 'status.inactive' | translate }}</span>
+            <strong class="tnum">{{ inactiveTenants().length }}</strong>
+          </div>
+          <div class="summary-kpi">
+            <span>{{ 'reports.kpiUsers' | translate }}</span>
+            <strong class="tnum">{{ users().length }}</strong>
+          </div>
+          <div class="summary-kpi">
+            <span>{{ 'users.admins' | translate }}</span>
+            <strong class="tnum">{{ platformAdminUsers().length }}</strong>
+          </div>
+          <div class="summary-kpi">
+            <span>{{ 'reports.bothModules' | translate }}</span>
+            <strong class="tnum">{{ bothModules() }}</strong>
+          </div>
+        </div>
+
+        <div class="summary-grid">
+          <section>
+            <h3>{{ 'reports.modulesTitle' | translate }}</h3>
+            <table class="table print-table">
+              <tbody>
+                <tr>
+                  <td>{{ 'modules.property' | translate }}</td>
+                  <td class="tnum">{{ propertyCount() }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'modules.education' | translate }}</td>
+                  <td class="tnum">{{ educationCount() }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'reports.bothModules' | translate }}</td>
+                  <td class="tnum">{{ bothModules() }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'modules.noModules' | translate }}</td>
+                  <td class="tnum">{{ noModules() }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section>
+            <h3>{{ 'reports.usersTitle' | translate }}</h3>
+            <table class="table print-table">
+              <tbody>
+                <tr>
+                  <td>{{ 'common.total' | translate }}</td>
+                  <td class="tnum">{{ users().length }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'status.active' | translate }}</td>
+                  <td class="tnum">{{ activeUsers().length }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'users.platformAdmin' | translate }}</td>
+                  <td class="tnum">{{ platformAdminUsers().length }}</td>
+                </tr>
+                <tr>
+                  <td>{{ 'users.regularUser' | translate }}</td>
+                  <td class="tnum">{{ regularUsers().length }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+        <h3>{{ 'reports.tenantsTable' | translate }}</h3>
+        <div class="table-responsive">
+          <table class="table print-table">
+            <thead>
+              <tr>
+                <th>{{ 'dashboard.company' | translate }}</th>
+                <th>{{ 'dashboard.domain' | translate }}</th>
+                <th>{{ 'dashboard.modules' | translate }}</th>
+                <th>{{ 'dashboard.status' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of tenants(); track t.id) {
+                <tr>
+                  <td class="mono">{{ t.id }}</td>
+                  <td class="mono">{{ t.domain || '—' }}</td>
+                  <td>{{ modulesLabel(t) }}</td>
+                  <td>{{ (t.active ? 'status.active' : 'status.inactive') | translate }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="4">{{ 'common.none' | translate }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (
+        selectedReport() === 'tenants_all' ||
+        selectedReport() === 'tenants_active' ||
+        selectedReport() === 'tenants_inactive' ||
+        selectedReport() === 'modules'
+      ) {
+        <div class="count-line">
+          {{ 'reports.rowsCount' | translate: { count: reportTenants().length } }}
+          @if (moduleFilter() !== 'all') {
+            · {{ ('modules.' + moduleFilter()) | translate }}
+          }
+        </div>
+        <div class="table-responsive">
+          <table class="table print-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{ 'dashboard.company' | translate }}</th>
+                <th>{{ 'dashboard.domain' | translate }}</th>
+                <th>{{ 'dashboard.modules' | translate }}</th>
+                <th>{{ 'dashboard.status' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (t of reportTenants(); track t.id; let i = $index) {
+                <tr>
+                  <td class="tnum">{{ i + 1 }}</td>
+                  <td class="mono">{{ t.id }}</td>
+                  <td class="mono">{{ t.domain || '—' }}</td>
+                  <td>{{ modulesLabel(t) }}</td>
+                  <td>{{ (t.active ? 'status.active' : 'status.inactive') | translate }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5">{{ 'reports.emptyReport' | translate }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      @if (
+        selectedReport() === 'users_all' ||
+        selectedReport() === 'users_admins' ||
+        selectedReport() === 'users_regular'
+      ) {
+        <div class="count-line">
+          {{ 'reports.rowsCount' | translate: { count: reportUsers().length } }}
+        </div>
+        <div class="table-responsive">
+          <table class="table print-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>{{ 'tenants.name' | translate }}</th>
+                <th>{{ 'tenants.email' | translate }}</th>
+                <th>{{ 'tenants.mobile' | translate }}</th>
+                <th>{{ 'users.admins' | translate }}</th>
+                <th>{{ 'dashboard.status' | translate }}</th>
+                <th>{{ 'nav.tenants' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (u of reportUsers(); track u.id; let i = $index) {
+                <tr>
+                  <td class="tnum">{{ i + 1 }}</td>
+                  <td>{{ u.name }}</td>
+                  <td>{{ u.email }}</td>
+                  <td class="mono">{{ u.mobile || '—' }}</td>
+                  <td>
+                    {{
+                      (u.is_platform_admin ? 'users.platformAdmin' : 'users.regularUser') | translate
+                    }}
+                  </td>
+                  <td>{{ (u.active ? 'status.active' : 'status.inactive') | translate }}</td>
+                  <td class="tnum">{{ u.tenants_count || 0 }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7">{{ 'reports.emptyReport' | translate }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <footer class="print-foot">
+        {{ 'reports.printFoot' | translate }}
+      </footer>
+    </article>
+  }
+</div>

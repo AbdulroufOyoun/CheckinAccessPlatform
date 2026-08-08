@@ -1,0 +1,152 @@
+<div class="page users-page">
+  <header class="hero reveal-soft">
+    <div class="hero__copy">
+      <p class="eyebrow">{{ 'app.controlPlane' | translate }}</p>
+      <h1>{{ 'users.title' | translate }}</h1>
+      <p class="lede">{{ 'users.subtitle' | translate }}</p>
+      <p class="role-legend desktop-only-copy">{{ 'users.adminLegend' | translate }}</p>
+    </div>
+    <div class="hero__actions">
+      <button class="btn btn-ghost-soft" type="button" (click)="reload()" [disabled]="loading()">
+        {{ 'common.refresh' | translate }}
+      </button>
+      <a routerLink="/users/new" class="btn btn-primary">{{ 'common.createUser' | translate }}</a>
+    </div>
+  </header>
+
+  <div class="metrics reveal-soft" aria-label="summary">
+    <div class="metric">
+      <span class="metric__n tnum">{{ users().length }}</span>
+      <span class="metric__l">{{ 'common.total' | translate }}</span>
+    </div>
+    <div class="metric-divider" aria-hidden="true"></div>
+    <div class="metric">
+      <span class="metric__n tnum is-ok">{{ activeCount() }}</span>
+      <span class="metric__l">{{ 'status.active' | translate }}</span>
+    </div>
+    <div class="metric-divider" aria-hidden="true"></div>
+    <div class="metric">
+      <span class="metric__n tnum">{{ adminCount() }}</span>
+      <span class="metric__l">{{ 'users.admins' | translate }}</span>
+    </div>
+  </div>
+
+  <section class="panel reveal">
+    <div class="controls">
+      <label class="visually-hidden" for="user-search">{{ 'users.searchAria' | translate }}</label>
+      <div class="search">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+          <circle cx="8.5" cy="8.5" r="5.25" stroke="currentColor" stroke-width="1.5" />
+          <path d="M12.5 12.5 16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
+        <input
+          id="user-search"
+          type="search"
+          [placeholder]="'users.searchPlaceholder' | translate"
+          [ngModel]="query()"
+          (ngModelChange)="onQuery($event)"
+        />
+      </div>
+
+      <div class="filters" role="group" [attr.aria-label]="'users.filterAria' | translate">
+        <button type="button" [class.is-on]="status() === 'all'" (click)="setStatus('all')">
+          {{ 'status.all' | translate }}
+        </button>
+        <button type="button" [class.is-on]="status() === 'active'" (click)="setStatus('active')">
+          {{ 'status.active' | translate }}
+        </button>
+        <button type="button" [class.is-on]="status() === 'inactive'" (click)="setStatus('inactive')">
+          {{ 'status.inactive' | translate }}
+        </button>
+        <button type="button" [class.is-on]="status() === 'admin'" (click)="setStatus('admin')">
+          {{ 'users.admins' | translate }}
+        </button>
+      </div>
+
+      <span class="result-count tnum">{{ 'common.shown' | translate: { count: filtered().length } }}</span>
+    </div>
+
+    @if (loading()) {
+      <div class="list">
+        @for (_ of [1, 2, 3, 4]; track _) {
+          <div class="user-card skel">
+            <div class="skeleton avatar"></div>
+            <div class="skel-copy">
+              <div class="skeleton line w40"></div>
+              <div class="skeleton line w60"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else if (!filtered().length) {
+      <div class="empty-state reveal">
+        <div class="empty-orb" aria-hidden="true"></div>
+        @if (query().trim() || status() !== 'all') {
+          <h2>{{ 'users.noMatchesTitle' | translate }}</h2>
+          <p>{{ 'users.noMatchesText' | translate }}</p>
+          <button class="btn btn-outline-secondary" type="button" (click)="onQuery(''); setStatus('all')">
+            {{ 'common.clearFilters' | translate }}
+          </button>
+        } @else {
+          <h2>{{ 'users.emptyTitle' | translate }}</h2>
+          <p>{{ 'users.emptyText' | translate }}</p>
+          <a routerLink="/users/new" class="btn btn-primary">{{ 'common.createUser' | translate }}</a>
+        }
+      </div>
+    } @else {
+      <ul class="list">
+        @for (u of filtered(); track u.id; let i = $index) {
+          <li class="user-card reveal-item" [style.--reveal-i]="i < 12 ? i : 12">
+            <button type="button" class="user-main" (click)="openUser(u.id)">
+              <span class="avatar" [attr.data-tone]="tone(u.id)" aria-hidden="true">{{ mark(u.name) }}</span>
+
+              <span class="body">
+                <span class="title-line">
+                  <span class="id">{{ u.name }}</span>
+                  <span class="pill" [class.is-on]="u.active" [class.is-off]="!u.active">
+                    {{ (u.active ? 'status.active' : 'status.inactive') | translate }}
+                  </span>
+                  @if (u.is_platform_admin) {
+                    <span class="pill is-admin">{{ 'users.platformAdmin' | translate }}</span>
+                  } @else {
+                    <span class="pill is-member">{{ 'users.regularUser' | translate }}</span>
+                  }
+                </span>
+
+                <span class="meta">
+                  <span class="email">{{ u.email }}</span>
+                  <span class="dot" aria-hidden="true">·</span>
+                  <span class="tnum">{{ u.mobile || ('common.none' | translate) }}</span>
+                  <span class="dot" aria-hidden="true">·</span>
+                  <span class="tnum">#{{ u.id }}</span>
+                  <span class="dot" aria-hidden="true">·</span>
+                  <span>{{ 'users.tenantsLinked' | translate: { count: u.tenants_count || 0 } }}</span>
+                </span>
+              </span>
+
+              <span class="row-actions" (click)="$event.stopPropagation()">
+                <button type="button" class="action-btn" (click)="openUserTenants($event, u.id)">
+                  {{ 'users.viewTenants' | translate }}
+                </button>
+                <button type="button" class="action-btn action-btn--ghost" (click)="openUser(u.id)">
+                  {{ 'common.open' | translate }}
+                </button>
+                <span class="chev" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none">
+                    <path
+                      d="M8 5.5 12.5 10 8 14.5"
+                      stroke="currentColor"
+                      stroke-width="1.6"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</div>

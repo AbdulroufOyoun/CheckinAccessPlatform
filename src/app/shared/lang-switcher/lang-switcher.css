@@ -1,0 +1,45 @@
+.lang-switch {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--ca-line);
+  border-radius: 8px;
+  background: #fafafa;
+  gap: 2px;
+}
+
+.lang-switch button {
+  border: 0;
+  background: transparent;
+  color: var(--ca-ink-3);
+  font-size: 0.75rem;
+  font-weight: 650;
+  min-height: 28px;
+  padding: 0.3rem 0.65rem;
+  border-radius: 6px;
+  letter-spacing: -0.01em;
+}
+
+.lang-switch button.is-on {
+  background: #fff;
+  color: var(--ca-ink);
+  box-shadow: 0 1px 0 rgba(9, 9, 11, 0.06);
+}
+
+.lang-switch.is-compact {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.lang-switch.is-compact button {
+  color: #a1a1aa;
+}
+
+.lang-switch.is-compact button.is-on {
+  background: rgba(15, 118, 110, 0.28);
+  color: #f0fdfa;
+  box-shadow: none;
+}
+
+.lang-switch.is-compact button:hover:not(.is-on) {
+  color: #e4e4e7;
+}
