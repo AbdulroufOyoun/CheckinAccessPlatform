@@ -4,7 +4,6 @@
       <p class="eyebrow">{{ 'app.controlPlane' | translate }}</p>
       <h1>{{ 'users.title' | translate }}</h1>
       <p class="lede">{{ 'users.subtitle' | translate }}</p>
-      <p class="role-legend desktop-only-copy">{{ 'users.adminLegend' | translate }}</p>
     </div>
     <div class="hero__actions">
       <button class="btn btn-ghost-soft" type="button" (click)="reload()" [disabled]="loading()">
@@ -23,11 +22,6 @@
     <div class="metric">
       <span class="metric__n tnum is-ok">{{ activeCount() }}</span>
       <span class="metric__l">{{ 'status.active' | translate }}</span>
-    </div>
-    <div class="metric-divider" aria-hidden="true"></div>
-    <div class="metric">
-      <span class="metric__n tnum">{{ adminCount() }}</span>
-      <span class="metric__l">{{ 'users.admins' | translate }}</span>
     </div>
   </div>
 
@@ -57,9 +51,6 @@
         </button>
         <button type="button" [class.is-on]="status() === 'inactive'" (click)="setStatus('inactive')">
           {{ 'status.inactive' | translate }}
-        </button>
-        <button type="button" [class.is-on]="status() === 'admin'" (click)="setStatus('admin')">
-          {{ 'users.admins' | translate }}
         </button>
       </div>
 
@@ -106,11 +97,6 @@
                   <span class="pill" [class.is-on]="u.active" [class.is-off]="!u.active">
                     {{ (u.active ? 'status.active' : 'status.inactive') | translate }}
                   </span>
-                  @if (u.is_platform_admin) {
-                    <span class="pill is-admin">{{ 'users.platformAdmin' | translate }}</span>
-                  } @else {
-                    <span class="pill is-member">{{ 'users.regularUser' | translate }}</span>
-                  }
                 </span>
 
                 <span class="meta">

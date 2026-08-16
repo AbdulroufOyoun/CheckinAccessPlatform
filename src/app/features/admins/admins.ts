@@ -66,7 +66,7 @@ export class AdminsPage implements OnInit, OnDestroy {
     this.loading.set(true);
     this.cdr.detectChanges();
     try {
-      const users = await this.usersApi.listPlatformUsers();
+      const users = await this.usersApi.listPlatformUsers(undefined, { isPlatformAdmin: true });
       this.platformUsers.set(Array.isArray(users) ? users : []);
     } catch (error) {
       this.toast.show(

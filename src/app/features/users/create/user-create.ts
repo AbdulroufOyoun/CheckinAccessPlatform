@@ -28,7 +28,6 @@ export class UserCreatePage implements OnDestroy {
     email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
     mobile: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
     password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(255)]],
-    is_platform_admin: [false],
   });
 
   constructor() {
@@ -55,7 +54,7 @@ export class UserCreatePage implements OnDestroy {
         email: raw.email.trim(),
         mobile: raw.mobile.trim(),
         password: raw.password,
-        is_platform_admin: raw.is_platform_admin,
+        is_platform_admin: false,
       });
       this.toast.show(this.translate.instant('users.created'), 'success');
       await this.router.navigate(['/users']);
