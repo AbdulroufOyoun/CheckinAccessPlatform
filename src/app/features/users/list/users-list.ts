@@ -7,7 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { PlatformUser } from '../../../core/models/user';
 import { ApiError } from '../../../core/models/api-envelope';
 
-type StatusFilter = 'all' | 'active' | 'inactive' | 'admin';
+type StatusFilter = 'all' | 'active' | 'inactive';
 
 @Component({
   selector: 'app-users-list',
@@ -28,15 +28,14 @@ export class UsersListPage implements OnInit {
   readonly users = signal<PlatformUser[]>([]);
 
   readonly activeCount = computed(() => this.users().filter((u) => !!u.active).length);
-  readonly adminCount = computed(() => this.users().filter((u) => !!u.is_platform_admin).length);
 
   readonly filtered = computed(() => {
     const q = this.query().trim().toLowerCase();
     const status = this.status();
     return this.users().filter((u) => {
+      if (u.is_platform_admin) return false;
       if (status === 'active' && !u.active) return false;
       if (status === 'inactive' && u.active) return false;
-      if (status === 'admin' && !u.is_platform_admin) return false;
       if (!q) return true;
       return (
         String(u.id).includes(q) ||
@@ -83,7 +82,7 @@ export class UsersListPage implements OnInit {
     this.loading.set(true);
     this.cdr.detectChanges();
     try {
-      const list = await this.usersApi.listPlatformUsers();
+      const list = await this.usersApi.listPlatformUsers(undefined, { isPlatformAdmin: false });
       this.users.set(Array.isArray(list) ? list : []);
     } catch (error) {
       const message =

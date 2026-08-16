@@ -66,27 +66,6 @@
       </div>
     </section>
 
-    <section class="form-section">
-      <div class="section-head">
-        <span class="step">2</span>
-        <div>
-          <div class="section-title">{{ 'users.stepAccess' | translate }}</div>
-          <p class="section-copy">{{ 'users.stepAccessCopy' | translate }}</p>
-        </div>
-      </div>
-
-      <label class="admin-toggle" [class.is-on]="form.controls.is_platform_admin.value">
-        <input class="visually-hidden" type="checkbox" formControlName="is_platform_admin" />
-        <span class="admin-toggle__body">
-          <strong>{{ 'users.platformAdmin' | translate }}</strong>
-          <small>{{ 'users.platformAdminHint' | translate }}</small>
-        </span>
-        <span class="admin-toggle__state">
-          {{ (form.controls.is_platform_admin.value ? 'common.on' : 'common.off') | translate }}
-        </span>
-      </label>
-    </section>
-
     <div class="form-actions">
       <a routerLink="/users" class="btn btn-outline-secondary">{{ 'common.cancel' | translate }}</a>
       <button class="btn btn-primary" type="submit" [disabled]="loading">

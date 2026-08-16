@@ -10,9 +10,18 @@ import {
 export class UserService {
   private readonly api = inject(ApiClient);
 
-  async listPlatformUsers(q?: string): Promise<PlatformUser[]> {
-    const params = q?.trim() ? { q: q.trim() } : undefined;
-    return this.api.get<PlatformUser[]>('users', params);
+  async listPlatformUsers(
+    q?: string,
+    options?: { isPlatformAdmin?: boolean },
+  ): Promise<PlatformUser[]> {
+    const params: Record<string, string | boolean> = {};
+    if (q?.trim()) {
+      params['q'] = q.trim();
+    }
+    if (options?.isPlatformAdmin !== undefined) {
+      params['is_platform_admin'] = options.isPlatformAdmin;
+    }
+    return this.api.get<PlatformUser[]>('users', Object.keys(params).length ? params : undefined);
   }
 
   async getPlatformUser(id: number | string): Promise<PlatformUser> {
