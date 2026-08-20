@@ -32,7 +32,7 @@ export class AuthService {
   constructor() {
     if (isPlatformBrowser(this.platformId)) {
       const at = Number(sessionStorage.getItem(ME_AT_KEY) || 0);
-      this.meCachedAt = at || Date.now();
+      this.meCachedAt = Number.isFinite(at) ? at : 0;
     }
   }
 

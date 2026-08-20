@@ -1,5 +1,14 @@
 import { Component, HostListener, OnInit, computed, inject, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  NavigationCancel,
+  NavigationEnd,
+  NavigationError,
+  NavigationStart,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,6 +30,7 @@ export class ShellLayout implements OnInit {
   private readonly translate = inject(TranslateService);
 
   readonly moreOpen = signal(false);
+  readonly routeLoading = signal(true);
 
   readonly initials = computed(() => {
     const name = this.auth.user()?.name?.trim() || this.auth.user()?.email || 'U';
@@ -34,21 +44,42 @@ export class ShellLayout implements OnInit {
   constructor() {
     this.router.events
       .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        filter(
+          (
+            event,
+          ): event is NavigationStart | NavigationEnd | NavigationCancel | NavigationError =>
+            event instanceof NavigationStart ||
+            event instanceof NavigationEnd ||
+            event instanceof NavigationCancel ||
+            event instanceof NavigationError,
+        ),
         takeUntilDestroyed(),
       )
       .subscribe((event) => {
+        if (event instanceof NavigationStart) {
+          this.routeLoading.set(true);
+          this.closeMore();
+          return;
+        }
         this.closeMore();
-        this.updateTitle(event.urlAfterRedirects);
+        if (event instanceof NavigationEnd) {
+          this.updateTitle(event.urlAfterRedirects);
+        }
+        this.routeLoading.set(false);
       });
+
+    this.translate.onLangChange.pipe(takeUntilDestroyed()).subscribe(() => {
+      this.updateTitle(this.router.url);
+    });
   }
 
   ngOnInit(): void {
     this.updateTitle(this.router.url);
-    this.translate.onLangChange
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.updateTitle(this.router.url));
     void this.auth.ensureMe();
+  }
+
+  onRouteActivate(): void {
+    this.routeLoading.set(false);
   }
 
   private updateTitle(url: string): void {

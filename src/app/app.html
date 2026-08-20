@@ -2,7 +2,7 @@
   @for (msg of toast.messages(); track msg.id) {
     <div class="alert alert-{{ msg.kind }} shadow-sm mb-2 py-2 px-3" role="alert">
       {{ msg.text }}
-      <button type="button" class="btn-close float-end" (click)="toast.dismiss(msg.id)"></button>
+      <button type="button" class="btn-close float-end" (click)="toast.dismiss(msg.id)" [attr.aria-label]="'common.dismiss' | translate"></button>
     </div>
   }
 </div>

@@ -145,8 +145,29 @@
     </button>
   </header>
 
-  <main class="main" id="main-content">
-    <router-outlet />
+  <main class="main" id="main">
+    @if (routeLoading()) {
+      <div class="route-pending" aria-busy="true" [attr.aria-label]="'common.loading' | translate">
+        <div class="route-pending__header">
+          <div class="skeleton" style="width: min(240px, 60%); height: 28px"></div>
+          <div class="skeleton" style="width: min(160px, 40%); height: 12px"></div>
+        </div>
+        <div class="route-pending__kpis">
+          @for (_ of [1, 2, 3]; track _) {
+            <div class="surface kpi">
+              <div class="skeleton mb-2" style="width: 40%; height: 12px"></div>
+              <div class="skeleton" style="width: 28%; height: 28px"></div>
+            </div>
+          }
+        </div>
+        <div class="surface p-3">
+          <div class="skeleton mb-3" style="width: 45%; height: 14px"></div>
+          <div class="skeleton mb-2" style="height: 12px"></div>
+          <div class="skeleton" style="width: 70%; height: 12px"></div>
+        </div>
+      </div>
+    }
+    <router-outlet (activate)="onRouteActivate()" />
   </main>
 
   <nav class="bottom-nav mobile-only" [attr.aria-label]="'nav.primary' | translate">

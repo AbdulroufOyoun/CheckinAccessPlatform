@@ -293,3 +293,46 @@
     </div>
   }
 </div>
+
+<ng-template #deactivateModal let-modal>
+  <div class="ca-confirm">
+    <button
+      type="button"
+      class="ca-confirm__close"
+      (click)="modal.dismiss()"
+      [attr.aria-label]="'common.cancel' | translate"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+      </svg>
+    </button>
+    <div class="ca-confirm__icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 8v5" stroke-linecap="round" />
+        <circle cx="12" cy="16.2" r="0.9" fill="currentColor" stroke="none" />
+      </svg>
+    </div>
+    <h2 class="ca-confirm__title" id="ca-deactivate-title">{{ 'tenants.deactivateTitle' | translate }}</h2>
+    <p class="ca-confirm__lead">{{ 'tenants.deactivateLead' | translate }}</p>
+    <div class="ca-confirm__tenant">
+      <span class="ca-confirm__mark" aria-hidden="true">{{ (tenant?.id || '?').slice(0, 2).toUpperCase() }}</span>
+      <span>
+        <strong>{{ tenant?.id }}</strong>
+        <small>{{ tenant?.domain || ('tenants.noDomain' | translate) }}</small>
+      </span>
+    </div>
+    <ul class="ca-confirm__points">
+      <li>{{ 'tenants.deactivatePointAccess' | translate }}</li>
+      <li>{{ 'tenants.deactivatePointPause' | translate }}</li>
+    </ul>
+    <div class="ca-confirm__actions">
+      <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">
+        {{ 'common.cancel' | translate }}
+      </button>
+      <button type="button" class="btn btn-danger" (click)="modal.close('deactivate')">
+        {{ 'tenants.deactivateConfirmAction' | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

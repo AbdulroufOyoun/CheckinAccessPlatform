@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TenantService } from '../../../core/services/tenant.service';
 import { UserService } from '../../../core/services/user.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -23,6 +24,9 @@ export class TenantDetailPage implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly fb = inject(FormBuilder);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly modal = inject(NgbModal);
+
+  @ViewChild('deactivateModal') private deactivateModal?: TemplateRef<unknown>;
 
   tenantId = '';
   tenant: TenantSummary | null = null;
@@ -145,10 +149,8 @@ export class TenantDetailPage implements OnInit {
   async toggleActive(): Promise<void> {
     if (!this.tenant) return;
     if (this.tenant.active) {
-      const ok = window.confirm(
-        this.translate.instant('tenants.deactivateConfirm', { id: this.tenant.id }),
-      );
-      if (!ok) return;
+      const confirmed = await this.confirmDeactivate();
+      if (!confirmed) return;
     }
     this.saving = true;
     this.cdr.detectChanges();
@@ -168,6 +170,25 @@ export class TenantDetailPage implements OnInit {
     } finally {
       this.saving = false;
       this.cdr.detectChanges();
+    }
+  }
+
+  private async confirmDeactivate(): Promise<boolean> {
+    if (!this.deactivateModal) return false;
+    const ref = this.modal.open(this.deactivateModal, {
+      centered: true,
+      backdrop: 'static',
+      keyboard: true,
+      windowClass: 'ca-confirm-window',
+      backdropClass: 'ca-confirm-backdrop',
+      modalDialogClass: 'ca-confirm-dialog',
+      ariaLabelledBy: 'ca-deactivate-title',
+    });
+    try {
+      await ref.result;
+      return true;
+    } catch {
+      return false;
     }
   }
 

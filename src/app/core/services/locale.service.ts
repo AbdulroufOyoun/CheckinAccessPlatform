@@ -1,6 +1,7 @@
 import { ApplicationRef, Injectable, inject, signal } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of, timeout } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export type AppLang = 'en' | 'ar';
 
@@ -22,10 +23,24 @@ export class LocaleService {
 
   async use(lang: AppLang, persist = true): Promise<void> {
     try {
-      await firstValueFrom(this.translate.use(lang));
+      await firstValueFrom(
+        this.translate.use(lang).pipe(
+          timeout({ first: 1200 }),
+          catchError(() => of(undefined)),
+        ),
+      );
     } catch {
-      await firstValueFrom(this.translate.use('en'));
       lang = 'en';
+      try {
+        await firstValueFrom(
+          this.translate.use('en').pipe(
+            timeout({ first: 800 }),
+            catchError(() => of(undefined)),
+          ),
+        );
+      } catch {
+        /* keep document lang even if translations are still settling */
+      }
     }
     this.langSignal.set(lang);
     this.applyDocument(lang);

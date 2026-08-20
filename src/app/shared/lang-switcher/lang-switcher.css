@@ -13,7 +13,8 @@
   color: var(--ca-ink-3);
   font-size: 0.75rem;
   font-weight: 650;
-  min-height: 28px;
+  min-height: 32px;
+  min-width: 44px;
   padding: 0.3rem 0.65rem;
   border-radius: 6px;
   letter-spacing: -0.01em;
