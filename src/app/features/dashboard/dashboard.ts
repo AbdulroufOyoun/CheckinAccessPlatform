@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { afterNextRender, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/services/auth.service';
@@ -13,11 +13,10 @@ import { ApiError } from '../../core/models/api-envelope';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class DashboardPage implements OnInit {
+export class DashboardPage {
   private readonly tenantsApi = inject(TenantService);
   private readonly toast = inject(ToastService);
   private readonly translate = inject(TranslateService);
-  private readonly cdr = inject(ChangeDetectorRef);
   private readonly router = inject(Router);
   readonly auth = inject(AuthService);
 
@@ -54,8 +53,10 @@ export class DashboardPage implements OnInit {
     return name.split(/\s+/)[0];
   });
 
-  async ngOnInit(): Promise<void> {
-    await this.reload();
+  constructor() {
+    afterNextRender(() => {
+      void this.reload();
+    });
   }
 
   mark(id: string): string {
@@ -68,7 +69,6 @@ export class DashboardPage implements OnInit {
 
   async reload(): Promise<void> {
     this.loading.set(true);
-    this.cdr.detectChanges();
     try {
       const list = await this.tenantsApi.listForDashboard();
       this.tenants.set(Array.isArray(list) ? list : []);
@@ -79,7 +79,6 @@ export class DashboardPage implements OnInit {
       this.tenants.set([]);
     } finally {
       this.loading.set(false);
-      this.cdr.detectChanges();
     }
   }
 }

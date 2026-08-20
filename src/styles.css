@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* ═══════════════════════════════════════════════════
@@ -9,8 +8,8 @@
   --ca-surface: #ffffff;
   --ca-ink: #09090b;
   --ca-ink-2: #3f3f46;
-  --ca-ink-3: #71717a;
-  --ca-ink-4: #a1a1aa;
+  --ca-ink-3: #52525b;
+  --ca-ink-4: #71717a;
   --ca-line: #e4e4e7;
   --ca-line-strong: #d4d4d8;
   --ca-sidebar: #18181b;
@@ -40,8 +39,8 @@
   --ca-content: 1080px;
   --ca-control-h: 40px;
   --ca-touch-min: 44px;
-  --ca-font: 'IBM Plex Sans', 'Cairo', system-ui, sans-serif;
-  --ca-mono: 'IBM Plex Sans', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --ca-font: system-ui, 'Segoe UI', sans-serif;
+  --ca-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --ca-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ca-dur: 140ms;
 
@@ -132,6 +131,194 @@ a:hover {
   --bs-btn-hover-bg: var(--ca-danger-soft);
   --bs-btn-hover-border-color: #fca5a5;
   --bs-btn-hover-color: var(--ca-danger);
+}
+
+.btn-danger {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--ca-danger);
+  --bs-btn-border-color: var(--ca-danger);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #991b1b;
+  --bs-btn-hover-border-color: #991b1b;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #7f1d1d;
+  --bs-btn-active-border-color: #7f1d1d;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-disabled-bg: #fca5a5;
+  --bs-btn-disabled-border-color: #fca5a5;
+}
+
+.ca-confirm-dialog {
+  max-width: 26.5rem;
+}
+
+.ca-confirm-dialog .modal-content {
+  border: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(9, 9, 11, 0.04),
+    0 24px 48px rgba(9, 9, 11, 0.16);
+}
+
+.ca-confirm-backdrop {
+  background: #09090b;
+}
+
+.ca-confirm {
+  position: relative;
+  padding: 1.45rem 1.35rem 1.2rem;
+}
+
+.ca-confirm::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  height: 3px;
+  background: var(--ca-danger);
+}
+
+.ca-confirm__close {
+  position: absolute;
+  inset-block-start: 0.7rem;
+  inset-inline-end: 0.7rem;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ca-ink-3);
+  cursor: pointer;
+}
+
+.ca-confirm__close:hover {
+  background: #f4f4f5;
+  color: var(--ca-ink);
+}
+
+.ca-confirm__close:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 3px var(--ca-accent-ring);
+}
+
+.ca-confirm__icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  display: grid;
+  place-items: center;
+  margin-block-end: 0.9rem;
+  border-radius: 12px;
+  background: var(--ca-danger-soft);
+  color: var(--ca-danger);
+}
+
+.ca-confirm__title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
+  color: var(--ca-ink);
+}
+
+.ca-confirm__lead {
+  margin: 0.45rem 0 0;
+  color: var(--ca-ink-3);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.ca-confirm__tenant {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block: 1rem 0.85rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--ca-line);
+  border-radius: 12px;
+  background: #fafafa;
+}
+
+.ca-confirm__tenant strong,
+.ca-confirm__tenant small {
+  display: block;
+}
+
+.ca-confirm__tenant strong {
+  font-size: 0.92rem;
+  letter-spacing: -0.02em;
+}
+
+.ca-confirm__tenant small {
+  margin-block-start: 0.1rem;
+  color: var(--ca-ink-3);
+  font-size: 0.78rem;
+}
+
+.ca-confirm__mark {
+  width: 2.4rem;
+  height: 2.4rem;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #ccfbf1, #99f6e4);
+  color: #115e59;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+
+.ca-confirm__points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.ca-confirm__points li {
+  position: relative;
+  padding-inline-start: 1.15rem;
+  color: var(--ca-ink-2);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.ca-confirm__points li::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0.5rem;
+  inset-inline-start: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--ca-danger);
+}
+
+.ca-confirm__actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-start: 1.15rem;
+}
+
+.ca-confirm__actions .btn {
+  min-height: 40px;
+}
+
+@media (max-width: 480px) {
+  .ca-confirm__actions {
+    flex-direction: column-reverse;
+  }
+
+  .ca-confirm__actions .btn {
+    width: 100%;
+  }
 }
 
 .btn-success {
@@ -512,7 +699,7 @@ a:hover {
 }
 
 .auth-brand-foot {
-  color: #71717a;
+  color: #d4d4d8;
   font-size: 0.75rem;
 }
 
@@ -636,7 +823,7 @@ a:hover {
 }
 
 html[dir='rtl'] body {
-  font-family: 'Cairo', 'IBM Plex Sans', system-ui, sans-serif;
+  font-family: system-ui, 'Segoe UI', Tahoma, sans-serif;
 }
 
 html[dir='rtl'] .auth-hero-title {

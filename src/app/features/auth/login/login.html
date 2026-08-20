@@ -1,5 +1,5 @@
 <div class="auth-split">
-  <aside class="auth-brand-pane reveal-soft">
+  <aside class="auth-brand-pane">
     <div class="auth-brand-top">
       <div class="auth-wordmark">{{ 'app.name' | translate }}</div>
       <app-lang-switcher [compact]="true" />
@@ -11,8 +11,8 @@
     <div class="auth-brand-foot">{{ 'auth.loginFoot' | translate }}</div>
   </aside>
 
-  <section class="auth-form-pane">
-    <div class="auth-form reveal">
+  <main class="auth-form-pane" id="main">
+    <div class="auth-form">
       <div class="auth-steps" aria-hidden="true">
         <div class="auth-step is-on">1</div>
         <div class="auth-step-line"></div>
@@ -20,7 +20,7 @@
       </div>
 
       <h2 class="h5 fw-bold mb-1" style="letter-spacing: -0.03em">{{ 'auth.signIn' | translate }}</h2>
-      <p class="mb-4" style="color: var(--ca-ink-3)">{{ 'auth.signInHint' | translate }}</p>
+      <p class="mb-4 auth-sign-hint">{{ 'auth.signInHint' | translate }}</p>
 
       <form [formGroup]="form" (ngSubmit)="submit()">
         <div class="mb-3">
@@ -49,7 +49,9 @@
               autocomplete="current-password"
               [attr.aria-invalid]="form.controls.password.touched && form.controls.password.invalid"
             />
-            <button class="pw-toggle" type="button" (click)="showPassword = !showPassword">
+            <button class="pw-toggle" type="button" (click)="showPassword = !showPassword"
+              [attr.aria-label]="(showPassword ? 'auth.hide' : 'auth.show') | translate"
+              [attr.aria-pressed]="showPassword">
               {{ (showPassword ? 'auth.hide' : 'auth.show') | translate }}
             </button>
           </div>
@@ -63,5 +65,5 @@
         </button>
       </form>
     </div>
-  </section>
+  </main>
 </div>

@@ -42,6 +42,7 @@
     "shown": "{{count}} shown",
     "clearFilters": "Clear filters",
     "loading": "Loading…",
+    "dismiss": "Dismiss",
     "on": "On",
     "off": "Off"
   },
@@ -196,7 +197,12 @@
     "adminFailed": "Admin create failed",
     "linkFailed": "Link failed",
     "loadOneFailed": "Failed to load tenant",
-    "deactivateConfirm": "Deactivate tenant “{{id}}”? Tenant admins will lose access until reactivated."
+    "deactivateConfirm": "Deactivate tenant “{{id}}”? Tenant admins will lose access until reactivated.",
+    "deactivateTitle": "Deactivate this tenant?",
+    "deactivateLead": "The tenant will be paused. You can reactivate it anytime from this page.",
+    "deactivatePointAccess": "Tenant admins will lose access until you reactivate.",
+    "deactivatePointPause": "Tenant APIs and operations will pause.",
+    "deactivateConfirmAction": "Yes, deactivate tenant"
   },
   "users": {
     "title": "Central users",

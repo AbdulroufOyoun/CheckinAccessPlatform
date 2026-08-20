@@ -8,3 +8,20 @@
   justify-content: space-between;
   gap: 0.75rem;
 }
+
+.form-control::placeholder {
+  color: #52525b;
+  opacity: 1;
+}
+
+.auth-sign-hint {
+  color: var(--ca-ink-3);
+}
+
+.btn.btn-primary {
+  min-height: 44px;
+}
+
+.form-control {
+  min-height: 44px;
+}

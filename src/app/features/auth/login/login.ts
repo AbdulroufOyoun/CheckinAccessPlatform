@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
@@ -13,13 +14,14 @@ import { LangSwitcher } from '../../../shared/lang-switcher/lang-switcher';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
   private readonly toast = inject(ToastService);
   private readonly translate = inject(TranslateService);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly title = inject(Title);
 
   loading = false;
   showPassword = false;
@@ -27,6 +29,10 @@ export class LoginPage {
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(4)]],
   });
+
+  ngOnInit(): void {
+    this.title.setTitle(this.translate.instant('auth.signIn') + ' — CheckinAccess');
+  }
 
   async submit(): Promise<void> {
     if (this.form.invalid) {

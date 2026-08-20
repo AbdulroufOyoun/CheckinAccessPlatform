@@ -1,5 +1,5 @@
 <div class="auth-split">
-  <aside class="auth-brand-pane reveal-soft">
+  <aside class="auth-brand-pane">
     <div class="auth-brand-top">
       <div class="auth-wordmark">{{ 'app.name' | translate }}</div>
       <app-lang-switcher [compact]="true" />
@@ -11,8 +11,8 @@
     <div class="auth-brand-foot">{{ 'auth.otpFoot' | translate }}</div>
   </aside>
 
-  <section class="auth-form-pane">
-    <div class="auth-form reveal">
+  <main class="auth-form-pane" id="main">
+    <div class="auth-form">
       <div class="auth-steps" aria-hidden="true">
         <div class="auth-step is-done">✓</div>
         <div class="auth-step-line is-done"></div>
@@ -67,5 +67,5 @@
         {{ 'auth.backToLogin' | translate }}
       </a>
     </div>
-  </section>
+  </main>
 </div>
