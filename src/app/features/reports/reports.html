@@ -228,8 +228,8 @@
             <thead>
               <tr>
                 <th>{{ 'dashboard.company' | translate }}</th>
-                <th>{{ 'dashboard.domain' | translate }}</th>
-                <th>{{ 'dashboard.modules' | translate }}</th>
+                <th class="hide-mobile">{{ 'dashboard.domain' | translate }}</th>
+                <th class="hide-mobile">{{ 'dashboard.modules' | translate }}</th>
                 <th>{{ 'dashboard.status' | translate }}</th>
               </tr>
             </thead>
@@ -237,8 +237,8 @@
               @for (t of tenants(); track t.id) {
                 <tr>
                   <td class="mono">{{ t.id }}</td>
-                  <td class="mono">{{ t.domain || '—' }}</td>
-                  <td>{{ modulesLabel(t) }}</td>
+                  <td class="mono hide-mobile">{{ t.domain || '—' }}</td>
+                  <td class="hide-mobile">{{ modulesLabel(t) }}</td>
                   <td>{{ (t.active ? 'status.active' : 'status.inactive') | translate }}</td>
                 </tr>
               } @empty {
@@ -267,20 +267,20 @@
           <table class="table print-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th class="hide-mobile">#</th>
                 <th>{{ 'dashboard.company' | translate }}</th>
-                <th>{{ 'dashboard.domain' | translate }}</th>
-                <th>{{ 'dashboard.modules' | translate }}</th>
+                <th class="hide-mobile">{{ 'dashboard.domain' | translate }}</th>
+                <th class="hide-mobile">{{ 'dashboard.modules' | translate }}</th>
                 <th>{{ 'dashboard.status' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               @for (t of reportTenants(); track t.id; let i = $index) {
                 <tr>
-                  <td class="tnum">{{ i + 1 }}</td>
+                  <td class="tnum hide-mobile">{{ i + 1 }}</td>
                   <td class="mono">{{ t.id }}</td>
-                  <td class="mono">{{ t.domain || '—' }}</td>
-                  <td>{{ modulesLabel(t) }}</td>
+                  <td class="mono hide-mobile">{{ t.domain || '—' }}</td>
+                  <td class="hide-mobile">{{ modulesLabel(t) }}</td>
                   <td>{{ (t.active ? 'status.active' : 'status.inactive') | translate }}</td>
                 </tr>
               } @empty {
@@ -305,29 +305,29 @@
           <table class="table print-table">
             <thead>
               <tr>
-                <th>#</th>
+                <th class="hide-mobile">#</th>
                 <th>{{ 'tenants.name' | translate }}</th>
                 <th>{{ 'tenants.email' | translate }}</th>
-                <th>{{ 'tenants.mobile' | translate }}</th>
-                <th>{{ 'users.admins' | translate }}</th>
+                <th class="hide-mobile">{{ 'tenants.mobile' | translate }}</th>
+                <th class="hide-mobile">{{ 'users.admins' | translate }}</th>
                 <th>{{ 'dashboard.status' | translate }}</th>
-                <th>{{ 'nav.tenants' | translate }}</th>
+                <th class="hide-mobile">{{ 'nav.tenants' | translate }}</th>
               </tr>
             </thead>
             <tbody>
               @for (u of reportUsers(); track u.id; let i = $index) {
                 <tr>
-                  <td class="tnum">{{ i + 1 }}</td>
+                  <td class="tnum hide-mobile">{{ i + 1 }}</td>
                   <td>{{ u.name }}</td>
                   <td>{{ u.email }}</td>
-                  <td class="mono">{{ u.mobile || '—' }}</td>
-                  <td>
+                  <td class="mono hide-mobile">{{ u.mobile || '—' }}</td>
+                  <td class="hide-mobile">
                     {{
                       (u.is_platform_admin ? 'users.platformAdmin' : 'users.regularUser') | translate
                     }}
                   </td>
                   <td>{{ (u.active ? 'status.active' : 'status.inactive') | translate }}</td>
-                  <td class="tnum">{{ u.tenants_count || 0 }}</td>
+                  <td class="tnum hide-mobile">{{ u.tenants_count || 0 }}</td>
                 </tr>
               } @empty {
                 <tr>

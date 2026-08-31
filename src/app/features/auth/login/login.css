@@ -9,6 +9,10 @@
   gap: 0.75rem;
 }
 
+.auth-form-pane {
+  padding-bottom: max(1.75rem, env(safe-area-inset-bottom, 0px));
+}
+
 .form-control::placeholder {
   color: #52525b;
   opacity: 1;
