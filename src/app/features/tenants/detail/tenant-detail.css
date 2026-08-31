@@ -683,6 +683,18 @@
 }
 
 @media (max-width: 720px) {
+  .admin-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.45rem;
+  }
+
+  .admins-panel {
+    background: transparent;
+    border: 0;
+  }
+
   .admin-table__head {
     display: none;
   }
@@ -691,6 +703,18 @@
     grid-template-columns: 1fr;
     gap: 0.45rem;
     padding: 0.95rem;
+    border: 1px solid var(--ca-line);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 1px 0 rgba(9, 9, 11, 0.02);
+  }
+
+  .admin-table__row:last-child {
+    border-bottom: 1px solid var(--ca-line);
+  }
+
+  .admin-table__row:hover {
+    background: #fff;
   }
 
   .admin-name-cell {

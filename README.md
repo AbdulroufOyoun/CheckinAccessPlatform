@@ -2,7 +2,9 @@
 
 Angular console for **platform owners** of CheckinAccess.
 
-Talks to the **central** Laravel API (`http://localhost:8000/api`) with Passport `user-api` tokens.  
+**Full stack install & run:** [`../README.md`](../README.md)
+
+Talks to the **central** Laravel API (`http://localhost:8000/api`) with Passport `user-api` tokens.
 Tenant day-to-day operations belong in **CheckinAccessFront**.
 
 ## Stack

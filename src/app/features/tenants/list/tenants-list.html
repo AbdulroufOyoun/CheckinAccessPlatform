@@ -65,7 +65,7 @@
     @if (loading()) {
       <div class="list">
         @for (_ of [1, 2, 3, 4]; track _) {
-          <div class="row skel">
+          <div class="tenant-card skel">
             <div class="skeleton avatar"></div>
             <div class="skel-copy">
               <div class="skeleton line w40"></div>
@@ -92,8 +92,8 @@
     } @else {
       <ul class="list">
         @for (t of filtered(); track t.id; let i = $index) {
-          <li class="reveal-item" [style.--reveal-i]="i < 12 ? i : 12">
-            <button type="button" class="row" (click)="openTenant(t.id)">
+          <li class="tenant-card reveal-item" [style.--reveal-i]="i < 12 ? i : 12">
+            <button type="button" class="tenant-main" (click)="openTenant(t.id)">
               <span class="avatar" [attr.data-tone]="tone(t.id)" aria-hidden="true">{{ mark(t.id) }}</span>
 
               <span class="body">
