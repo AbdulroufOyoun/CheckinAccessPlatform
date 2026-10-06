@@ -24,7 +24,8 @@
     "moreMenu": "خيارات إضافية",
     "signOut": "تسجيل الخروج",
     "admin": "مشرف",
-    "user": "مستخدم"
+    "user": "مستخدم",
+    "mobileApp": "تطبيق الجوال"
   },
   "common": {
     "refresh": "تحديث",
@@ -301,5 +302,34 @@
     "noPlatformAdmins": "لا يوجد مشرفو منصة بعد.",
     "platformCreated": "تم إنشاء مشرف المنصة",
     "platformFailed": "فشل إنشاء مشرف المنصة"
+  },
+  "mobileApp": {
+    "title": "إصدارات تطبيق الجوال",
+    "subtitle": "حدّد أدنى وآخر إصدار لأندرويد وiOS. من دون الأدنى يُحظر الاستخدام؛ بين الأدنى والأحدث يظهر تنبيه تحديث اختياري.",
+    "android": "أندرويد",
+    "ios": "iOS",
+    "androidHint": "سياسة النشر على Google Play.",
+    "iosHint": "سياسة النشر على App Store.",
+    "latestVersion": "آخر إصدار",
+    "minimumVersion": "أدنى إصدار مطلوب",
+    "minimumHint": "من دون هذا الإصدار لا يمكن استدعاء APIs الموبايل (426).",
+    "mandatoryLatest": "عند الحفظ: جعل آخر إصدار إجبارياً (الأدنى = الأحدث)",
+    "storeUrl": "رابط المتجر (اختياري)",
+    "saved": "تم حفظ إصدارات الجوال",
+    "loadFailed": "فشل تحميل إصدارات الجوال",
+    "saveFailed": "فشل حفظ إصدارات الجوال",
+    "changeNotes": "ملاحظات الإصدار (اختياري)",
+    "changeNotesHint": "تُحفظ في سجل التعديلات عند تغيير الإصدارات أو روابط المتجر. تظهر للمستخدم عند التحديث الاختياري.",
+    "changeNotesPlaceholder": "مثال: مزامنة الأقفال، إصلاحات…",
+    "historyTitle": "سجل التعديلات",
+    "historyEmpty": "لا يوجد تعديلات مسجّلة بعد.",
+    "fields": {
+      "android_minimum_version": "أدنى إصدار أندرويد",
+      "android_latest_version": "آخر إصدار أندرويد",
+      "android_store_url": "رابط Google Play",
+      "ios_minimum_version": "أدنى إصدار iOS",
+      "ios_latest_version": "آخر إصدار iOS",
+      "ios_store_url": "رابط App Store"
+    }
   }
 }

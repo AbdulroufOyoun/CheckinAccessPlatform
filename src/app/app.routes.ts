@@ -55,6 +55,11 @@ export const routes: Routes = [
         loadComponent: () => import('./features/reports/reports').then((m) => m.ReportsPage),
       },
       {
+        path: 'mobile-app',
+        loadComponent: () =>
+          import('./features/mobile-app/mobile-app-versions').then((m) => m.MobileAppVersionsPage),
+      },
+      {
         path: 'admins',
         loadComponent: () => import('./features/admins/admins').then((m) => m.AdminsPage),
       },

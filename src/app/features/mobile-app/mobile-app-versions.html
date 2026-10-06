@@ -1,0 +1,119 @@
+<div class="page">
+  <div class="page-header reveal-soft">
+    <div>
+      <h1>{{ 'mobileApp.title' | translate }}</h1>
+      <p class="subtitle">{{ 'mobileApp.subtitle' | translate }}</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-outline-secondary" type="button" (click)="reload()" [disabled]="loading || saving">
+        {{ 'common.refresh' | translate }}
+      </button>
+    </div>
+  </div>
+
+  @if (loading) {
+    <div class="surface p-4">
+      <div class="skeleton mb-2" style="height: 14px; width: 40%"></div>
+      <div class="skeleton" style="height: 120px"></div>
+    </div>
+  } @else {
+    <form class="grid-2 reveal" [formGroup]="form" (ngSubmit)="save()">
+      <section class="surface p-4">
+        <h2 class="h5 mb-1">{{ 'mobileApp.android' | translate }}</h2>
+        <p class="text-muted small mb-3">{{ 'mobileApp.androidHint' | translate }}</p>
+
+        <div class="mb-3">
+          <label class="form-label" for="android_latest">{{ 'mobileApp.latestVersion' | translate }}</label>
+          <input id="android_latest" class="form-control" formControlName="android_latest_version" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="android_min">{{ 'mobileApp.minimumVersion' | translate }}</label>
+          <input id="android_min" class="form-control" formControlName="android_minimum_version" />
+          <div class="form-text">{{ 'mobileApp.minimumHint' | translate }}</div>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="android_mandatory" formControlName="android_mandatory_latest" />
+          <label class="form-check-label" for="android_mandatory">{{ 'mobileApp.mandatoryLatest' | translate }}</label>
+        </div>
+        <div class="mb-0">
+          <label class="form-label" for="android_store">{{ 'mobileApp.storeUrl' | translate }}</label>
+          <input id="android_store" class="form-control" formControlName="android_store_url" />
+        </div>
+      </section>
+
+      <section class="surface p-4">
+        <h2 class="h5 mb-1">{{ 'mobileApp.ios' | translate }}</h2>
+        <p class="text-muted small mb-3">{{ 'mobileApp.iosHint' | translate }}</p>
+
+        <div class="mb-3">
+          <label class="form-label" for="ios_latest">{{ 'mobileApp.latestVersion' | translate }}</label>
+          <input id="ios_latest" class="form-control" formControlName="ios_latest_version" />
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="ios_min">{{ 'mobileApp.minimumVersion' | translate }}</label>
+          <input id="ios_min" class="form-control" formControlName="ios_minimum_version" />
+          <div class="form-text">{{ 'mobileApp.minimumHint' | translate }}</div>
+        </div>
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="ios_mandatory" formControlName="ios_mandatory_latest" />
+          <label class="form-check-label" for="ios_mandatory">{{ 'mobileApp.mandatoryLatest' | translate }}</label>
+        </div>
+        <div class="mb-0">
+          <label class="form-label" for="ios_store">{{ 'mobileApp.storeUrl' | translate }}</label>
+          <input id="ios_store" class="form-control" formControlName="ios_store_url" />
+        </div>
+      </section>
+
+      <section class="surface p-4 notes-section">
+        <h2 class="h5 mb-1">{{ 'mobileApp.changeNotes' | translate }}</h2>
+        <p class="text-muted small mb-3">{{ 'mobileApp.changeNotesHint' | translate }}</p>
+        <textarea
+          id="release_notes"
+          class="form-control"
+          rows="3"
+          formControlName="notes"
+          [placeholder]="'mobileApp.changeNotesPlaceholder' | translate"
+        ></textarea>
+      </section>
+
+      <div class="actions-row">
+        <button class="btn btn-primary" type="submit" [disabled]="saving || form.invalid">
+          {{ 'common.save' | translate }}
+        </button>
+      </div>
+    </form>
+
+    <section class="surface p-4 history-section reveal">
+      <h2 class="h5 mb-3">{{ 'mobileApp.historyTitle' | translate }}</h2>
+      @if (!history.length) {
+        <p class="text-muted mb-0">{{ 'mobileApp.historyEmpty' | translate }}</p>
+      } @else {
+        <ul class="history-list list-unstyled mb-0">
+          @for (entry of history; track entry.id) {
+            <li class="history-item">
+              <div class="history-item__meta">
+                <strong>{{ formatHistoryDate(entry.created_at) }}</strong>
+                @if (entry.changed_by) {
+                  <span class="text-muted"> · {{ entry.changed_by.name }}</span>
+                }
+              </div>
+              @if (entry.notes) {
+                <p class="history-item__notes mb-2">{{ entry.notes }}</p>
+              }
+              <ul class="history-changes list-unstyled mb-0">
+                @for (change of entry.changes; track change.field) {
+                  <li>
+                    <span class="history-change-field">{{ changeLabel(change.field) }}</span>:
+                    <span dir="ltr">{{ formatChangeValue(change.old) }}</span>
+                    →
+                    <span dir="ltr">{{ formatChangeValue(change.new) }}</span>
+                  </li>
+                }
+              </ul>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</div>

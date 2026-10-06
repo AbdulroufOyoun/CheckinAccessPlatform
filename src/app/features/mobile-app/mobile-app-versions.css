@@ -1,0 +1,60 @@
+.grid-2 {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 992px) {
+  .grid-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.actions-row {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notes-section {
+  grid-column: 1 / -1;
+}
+
+.history-section {
+  margin-top: 1rem;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.history-item {
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.7);
+}
+
+.history-item__meta {
+  font-size: 0.85rem;
+  margin-bottom: 0.35rem;
+}
+
+.history-item__notes {
+  font-size: 0.92rem;
+  white-space: pre-wrap;
+}
+
+.history-changes {
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.history-changes li + li {
+  margin-top: 0.25rem;
+}
+
+.history-change-field {
+  font-weight: 600;
+}

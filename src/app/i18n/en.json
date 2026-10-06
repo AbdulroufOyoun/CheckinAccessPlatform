@@ -24,7 +24,8 @@
     "moreMenu": "More options",
     "signOut": "Sign out",
     "admin": "Admin",
-    "user": "User"
+    "user": "User",
+    "mobileApp": "Mobile app"
   },
   "common": {
     "refresh": "Refresh",
@@ -301,5 +302,34 @@
     "noPlatformAdmins": "No platform admins yet.",
     "platformCreated": "Platform admin created",
     "platformFailed": "Failed to create platform admin"
+  },
+  "mobileApp": {
+    "title": "Mobile app versions",
+    "subtitle": "Set Android and iOS minimum and latest versions. Clients below minimum are blocked; between minimum and latest get an optional update hint.",
+    "android": "Android",
+    "ios": "iOS",
+    "androidHint": "Play Store release policy for the tenant mobile app.",
+    "iosHint": "App Store release policy for the tenant mobile app.",
+    "latestVersion": "Latest version",
+    "minimumVersion": "Minimum required version",
+    "minimumHint": "Users below this version cannot call mobile APIs (HTTP 426).",
+    "mandatoryLatest": "On save, make latest version mandatory (set minimum = latest)",
+    "storeUrl": "Store URL (optional)",
+    "saved": "Mobile app versions saved",
+    "loadFailed": "Failed to load mobile app versions",
+    "saveFailed": "Failed to save mobile app versions",
+    "changeNotes": "Release notes (optional)",
+    "changeNotesHint": "Saved in change history when you modify version or store settings. Shown to mobile users on optional updates.",
+    "changeNotesPlaceholder": "e.g. New lock sync, bug fixes…",
+    "historyTitle": "Change history",
+    "historyEmpty": "No changes recorded yet.",
+    "fields": {
+      "android_minimum_version": "Android minimum",
+      "android_latest_version": "Android latest",
+      "android_store_url": "Android store URL",
+      "ios_minimum_version": "iOS minimum",
+      "ios_latest_version": "iOS latest",
+      "ios_store_url": "iOS store URL"
+    }
   }
 }

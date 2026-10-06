@@ -68,6 +68,18 @@
             <span class="side-link__text">{{ 'nav.reports' | translate }}</span>
           </a>
 
+          <a routerLink="/mobile-app" routerLinkActive="is-active" class="side-link">
+            <svg class="side-ico" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path
+                d="M7 3.5h6a1.5 1.5 0 0 1 1.5 1.5v10a1.5 1.5 0 0 1-1.5 1.5H7A1.5 1.5 0 0 1 5.5 15V5A1.5 1.5 0 0 1 7 3.5Z"
+                stroke="currentColor"
+                stroke-width="1.5"
+              />
+              <path d="M8.5 14h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            </svg>
+            <span class="side-link__text">{{ 'nav.mobileApp' | translate }}</span>
+          </a>
+
           <a routerLink="/admins" routerLinkActive="is-active" class="side-link">
             <svg class="side-ico" viewBox="0 0 20 20" fill="none" aria-hidden="true">
               <path
@@ -263,6 +275,9 @@
         </a>
         <a routerLink="/reports" class="more-link" (click)="closeMore()">
           <span>{{ 'nav.reports' | translate }}</span>
+        </a>
+        <a routerLink="/mobile-app" class="more-link" (click)="closeMore()">
+          <span>{{ 'nav.mobileApp' | translate }}</span>
         </a>
         <a routerLink="/admins" class="more-link" (click)="closeMore()">
           <span>{{ 'nav.admins' | translate }}</span>
