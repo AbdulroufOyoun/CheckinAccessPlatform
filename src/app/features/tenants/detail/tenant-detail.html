@@ -157,6 +157,32 @@
             {{ 'common.save' | translate }}
           </button>
         </form>
+        <div class="admin-url-block">
+          <span class="admin-url-block__label">{{ 'tenants.adminUrlLabel' | translate }}</span>
+          <div class="admin-url-row">
+            <code class="admin-url mono">{{ tenantAdminUrl || ('tenants.adminUrlMissing' | translate) }}</code>
+            <div class="admin-url-row__actions">
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm"
+                [disabled]="!tenantAdminUrl"
+                (click)="copyTenantAdminUrl()"
+              >
+                {{ 'tenants.copyAdminUrl' | translate }}
+              </button>
+              @if (tenantAdminUrl) {
+                <a
+                  class="btn btn-outline-primary btn-sm"
+                  [href]="tenantAdminUrl"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {{ 'tenants.openAdminUrl' | translate }}
+                </a>
+              }
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="card reveal-item" style="--reveal-i: 1">

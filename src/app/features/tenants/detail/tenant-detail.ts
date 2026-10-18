@@ -9,6 +9,7 @@ import { ToastService } from '../../../core/services/toast.service';
 import { TenantAdmin, TenantModule, TenantSummary } from '../../../core/models/tenant';
 import { PlatformUser } from '../../../core/models/user';
 import { ApiError } from '../../../core/models/api-envelope';
+import { buildTenantAdminUrl } from '../../../core/tenant-admin-url';
 
 @Component({
   selector: 'app-tenant-detail',
@@ -99,6 +100,39 @@ export class TenantDetailPage implements OnInit {
   roleLabel(roles?: string[]): string {
     if (!roles?.length) return this.translate.instant('tenants.adminRole');
     return roles.join(', ');
+  }
+
+  get tenantAdminUrl(): string | null {
+    return buildTenantAdminUrl(this.tenant?.domain);
+  }
+
+  async copyTenantAdminUrl(): Promise<void> {
+    const url = this.tenantAdminUrl;
+    if (!url) {
+      this.toast.show(this.translate.instant('tenants.adminUrlMissing'), 'warning');
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(url);
+      this.toast.show(this.translate.instant('tenants.adminUrlCopied'), 'success');
+      return;
+    } catch {
+      /* fallback below */
+    }
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      this.toast.show(this.translate.instant('tenants.adminUrlCopied'), 'success');
+    } catch {
+      this.toast.show(this.translate.instant('tenants.adminUrlCopyFailed'), 'danger');
+    }
   }
 
   async saveDomain(): Promise<void> {

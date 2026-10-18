@@ -143,6 +143,7 @@
     "domainRequired": "Domain is required.",
     "stepModules": "Modules",
     "stepModulesCopy": "Choose what this company can operate on day one.",
+    "establishmentOnboardingHint": "Accommodation (property): Super Admin picks the establishment type (hotel, compound, hospital, etc.) on first dashboard login. University-only tenants skip that wizard.",
     "selectModule": "Select at least one module.",
     "modulesAria": "Modules",
     "provisioning": "Provisioning…",

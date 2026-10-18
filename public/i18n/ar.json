@@ -143,6 +143,7 @@
     "domainRequired": "النطاق مطلوب.",
     "stepModules": "الوحدات",
     "stepModulesCopy": "اختر ما يمكن لهذه الشركة تشغيله من اليوم الأول.",
+    "establishmentOnboardingHint": "التسكين (property): Super Admin يختار نوع المنشأة (فندق، مجمع، مشفى…) عند أول دخول للوحة. زبائن الجامعة فقط بدون معالج.",
     "selectModule": "اختر وحدة واحدة على الأقل.",
     "modulesAria": "الوحدات",
     "provisioning": "جاري التجهيز…",
