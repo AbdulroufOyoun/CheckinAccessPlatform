@@ -1,6 +1,7 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8000/api',
+  /** Central CheckinAccess API (Herd). Use :8000 only if you run `php artisan serve`. */
+  apiBaseUrl: 'http://checkinaccess.test/api',
   appName: 'CheckinAccess',
   tenantAdmin: {
     scheme: 'http',

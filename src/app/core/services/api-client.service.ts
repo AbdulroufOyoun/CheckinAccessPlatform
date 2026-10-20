@@ -67,6 +67,13 @@ export class ApiClient {
     }
     if (error instanceof HttpErrorResponse) {
       const body = error.error as ApiEnvelope | undefined;
+      if (error.status === 0) {
+        return new ApiError(
+          `Cannot reach API at ${this.baseUrl}. Start Herd (checkinaccess.test) or set apiBaseUrl in src/environments/environment.development.ts.`,
+          0,
+          body ?? error.error,
+        );
+      }
       return new ApiError(
         formatApiMessage(body?.message, error.message || 'HTTP error'),
         error.status,

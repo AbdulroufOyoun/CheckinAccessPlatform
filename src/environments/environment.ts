@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiBaseUrl: 'http://localhost:8000/api',
+  apiBaseUrl: 'http://checkinaccess.test/api',
   appName: 'CheckinAccess',
   /** CheckinAccessFront dev URL (tenant admin SPA). */
   tenantAdmin: {
