@@ -7,6 +7,7 @@ export interface PlatformUser {
   mobile?: string;
   active?: boolean;
   is_platform_admin?: boolean;
+  is_lock_provisioner?: boolean;
   created_via_platform?: boolean;
   tenants_count?: number;
   tenants?: TenantSummary[];
@@ -23,6 +24,7 @@ export interface CreatePlatformUserPayload {
   title?: string | null;
   nationality?: string | null;
   is_platform_admin?: boolean;
+  is_lock_provisioner?: boolean;
   active?: boolean;
 }
 
@@ -34,6 +36,7 @@ export interface UpdatePlatformUserPayload {
   title?: string | null;
   nationality?: string | null;
   is_platform_admin?: boolean;
+  is_lock_provisioner?: boolean;
   active?: boolean;
 }
 

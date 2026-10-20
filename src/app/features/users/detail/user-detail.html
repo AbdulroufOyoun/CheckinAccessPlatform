@@ -1,5 +1,5 @@
 <div class="page detail-page">
-  <a routerLink="/users" class="back-link">← {{ 'common.backToUsers' | translate }}</a>
+  <a [routerLink]="backLink" class="back-link">← {{ backLabelKey | translate }}</a>
 
   @if (loading) {
     <div class="hero-card">
@@ -28,6 +28,9 @@
             <span class="pill" [class.is-on]="user.active" [class.is-off]="!user.active">
               {{ (user.active ? 'status.active' : 'status.inactive') | translate }}
             </span>
+            @if (user.is_lock_provisioner) {
+              <span class="pill is-lock-setup">{{ 'lockSetupUsers.badge' | translate }}</span>
+            }
             @if (user.is_platform_admin) {
               <span class="pill is-admin">{{ 'users.platformAdmin' | translate }}</span>
             }

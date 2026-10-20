@@ -51,6 +51,27 @@ export const routes: Routes = [
           import('./features/users/detail/user-detail').then((m) => m.UserDetailPage),
       },
       {
+        path: 'lock-setup-users',
+        loadComponent: () =>
+          import('./features/lock-setup-users/list/lock-setup-users-list').then(
+            (m) => m.LockSetupUsersListPage,
+          ),
+      },
+      {
+        path: 'lock-setup-users/new',
+        loadComponent: () =>
+          import('./features/lock-setup-users/create/lock-setup-user-create').then(
+            (m) => m.LockSetupUserCreatePage,
+          ),
+      },
+      {
+        path: 'lock-setup-users/:id',
+        loadComponent: () =>
+          import('./features/lock-setup-users/detail/lock-setup-user-detail').then(
+            (m) => m.LockSetupUserDetailPage,
+          ),
+      },
+      {
         path: 'reports',
         loadComponent: () => import('./features/reports/reports').then((m) => m.ReportsPage),
       },

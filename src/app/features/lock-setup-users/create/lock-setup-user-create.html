@@ -1,0 +1,63 @@
+<div class="page create-page reveal-soft">
+  <a routerLink="/lock-setup-users" class="back-link">← {{ 'lockSetupUsers.backToList' | translate }}</a>
+
+  <div class="page-header reveal">
+    <div>
+      <h1>{{ 'lockSetupUsers.createTitle' | translate }}</h1>
+      <p>{{ 'lockSetupUsers.createSubtitle' | translate }}</p>
+    </div>
+  </div>
+
+  <form class="surface form-card reveal" [formGroup]="form" (ngSubmit)="submit()">
+    <section class="form-section">
+      <div class="section-head">
+        <span class="step">1</span>
+        <div>
+          <div class="section-title">{{ 'users.stepIdentity' | translate }}</div>
+          <p class="section-copy">{{ 'lockSetupUsers.createHint' | translate }}</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="name">{{ 'tenants.name' | translate }}</label>
+        <input id="name" class="form-control" formControlName="name" autocomplete="name" />
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="email">{{ 'tenants.email' | translate }}</label>
+        <input id="email" class="form-control" type="email" formControlName="email" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="mobile">{{ 'tenants.mobile' | translate }}</label>
+        <input
+          id="mobile"
+          class="form-control mono"
+          formControlName="mobile"
+          inputmode="numeric"
+          maxlength="10"
+          placeholder="05xxxxxxxx"
+          autocomplete="tel"
+        />
+      </div>
+
+      <div class="field">
+        <label class="form-label" for="password">{{ 'tenants.password' | translate }}</label>
+        <input
+          id="password"
+          class="form-control"
+          type="password"
+          formControlName="password"
+          autocomplete="new-password"
+        />
+      </div>
+    </section>
+
+    <div class="form-actions">
+      <a routerLink="/lock-setup-users" class="btn btn-outline-secondary">{{ 'common.cancel' | translate }}</a>
+      <button class="btn btn-primary" type="submit" [disabled]="loading">
+        {{ loading ? ('common.loading' | translate) : ('lockSetupUsers.create' | translate) }}
+      </button>
+    </div>
+  </form>
+</div>

@@ -12,7 +12,7 @@ export class UserService {
 
   async listPlatformUsers(
     q?: string,
-    options?: { isPlatformAdmin?: boolean },
+    options?: { isPlatformAdmin?: boolean; isLockProvisioner?: boolean },
   ): Promise<PlatformUser[]> {
     const params: Record<string, string | boolean> = {};
     if (q?.trim()) {
@@ -20,6 +20,9 @@ export class UserService {
     }
     if (options?.isPlatformAdmin !== undefined) {
       params['is_platform_admin'] = options.isPlatformAdmin;
+    }
+    if (options?.isLockProvisioner !== undefined) {
+      params['is_lock_provisioner'] = options.isLockProvisioner;
     }
     return this.api.get<PlatformUser[]>('users', Object.keys(params).length ? params : undefined);
   }

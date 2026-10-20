@@ -118,6 +118,12 @@
   border-color: #e4e4e7;
 }
 
+.pill.is-lock-setup {
+  color: #0f766e;
+  background: #f0fdfa;
+  border-color: #99f6e4;
+}
+
 .pill.is-admin {
   color: #0f766e;
   background: #f0fdfa;

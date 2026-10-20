@@ -29,6 +29,16 @@ export class UserDetailPage implements OnInit, OnDestroy {
   loading = true;
   saving = false;
 
+  get backLink(): string {
+    return this.router.url.includes('/lock-setup-users') ? '/lock-setup-users' : '/users';
+  }
+
+  get backLabelKey(): string {
+    return this.router.url.includes('/lock-setup-users')
+      ? 'lockSetupUsers.backToList'
+      : 'common.backToUsers';
+  }
+
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.maxLength(255)]],
     email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
